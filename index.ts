@@ -4,7 +4,6 @@ import { i18n, TFunction } from "i18next";
 declare module "vue/types/vue" {
     interface Vue {
         $t: TFunction;
-        $i18next: i18n;
 
         __bundles?: Array<[string, string]>;  // the bundles loaded by the component
         __key?: (key: string) => string; // local to each component with an <i18n> block
@@ -24,6 +23,8 @@ interface VueI18NextOptions {
 export default function install(Vue: typeof _Vue, { i18next }: VueI18NextOptions): void {
     Vue.mixin({
         beforeCreate() {
+            this.__key = undefined; // required to enable proxied access to `__key` in the $t function
+
             if (!this.$options.__i18n) return;
 
             // each component gets its own 8-digit random namespace prefixed with its name if available
