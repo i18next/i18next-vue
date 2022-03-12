@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This library is a simple wrapper for [i18next](https://www.i18next.com), simplifying its use in Vue.
+This library is a simple wrapper for [i18next](https://www.i18next.com), simplifying its use in Vue 3.
 
 ## Initialisation
 
@@ -13,15 +13,11 @@ import i18next from "i18next";
 import VueI18Next from "@dotbase/vue-i18next";
 import App from "./App.vue";
 
-Vue.use(VueI18Next, { i18next });
+/*const i18nInitialized = */i18next.init({ ... });
+createApp(App).use(VueI18Next, { i18next }).mount('#app') };
 
-i18next.on("initialized", () => {
-    new Vue({
-        render: h => h(App),
-    }).$mount("#app");
-});
-
-i18next.init({ ... });
+// to wait for loading the translations first, do this instead:
+// i18nInitialized.then(() => createApp(App).use(VueI18Next, { i18next }).mount('#app'));
 ```
 
 ## Usage
