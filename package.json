@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",

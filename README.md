@@ -5,6 +5,13 @@
 
 This library is a simple wrapper for [i18next](https://www.i18next.com), simplifying its use in Vue 3.
 
+
+## Installation
+
+```bash
+npm install @dotbase/vue-i18next@kkuegler/vue-i18next#vue-3
+```
+
 ## Initialisation
 
 ```typescript
