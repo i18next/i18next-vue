@@ -1,4 +1,4 @@
-import { ref, App, ComponentPublicInstance } from "vue";
+import { ref, getCurrentInstance, App, ComponentPublicInstance } from "vue";
 import { i18n, TFunction, TOptions } from "i18next";
 
 declare module 'vue' {
@@ -7,9 +7,10 @@ declare module 'vue' {
         $i18next: i18n;
     }
 }
+type SimpleTFunction = (key: string, options?: TOptions | string) => string;
 type ComponentI18nInstance = ComponentPublicInstance & {
     __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-    __translate: (key: string, options?: TOptions | string) => string; // local to each component with an <i18n> block or i18nOptions
+    __translate?: SimpleTFunction; // local to each component with an <i18n> block or i18nOptions
 };
 
 type Messages = { [index: string]: string | Messages };
@@ -27,7 +28,7 @@ declare module 'vue' {
 
 interface VueI18NextOptions {
     i18next: i18n;
-    rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed' | 'loaded')[];
+    rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed')[];
 }
 
 export default function install(app: App, {
@@ -46,8 +47,7 @@ export default function install(app: App, {
         beforeCreate(this: ComponentI18nInstance) {
             const options = this.$options;
             if (!options.__i18n && !options.i18nOptions) {
-                //FIXME: oder muss man es in dem Fall gar nicht zuweisen
-                this.__translate = genericT;
+                this.__translate = undefined;  // required to enable proxied access to `__translate` in the $t function
                 return;
             }
 
@@ -75,9 +75,10 @@ export default function install(app: App, {
                 ns = [localNs].concat(ns ?? []); // add component-local namespace, thus finding and preferring local translations
             }
 
-            // Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option.
+            // Translation function respecting lng and ns.
+            // The namespace can be overriden in $t calls using a key prefix or the 'ns' option.
             const t = getTranslationFunction(lng, ns);
-            this.__translate = (key: string, options?: TOptions | string): string => {
+            this.__translate = (key, options) => {
                 if (!keyPrefix || includesNs(key)) {
                     return t(key, options);
                 } else { // adding keyPrefix only if key is not namespaced
@@ -92,10 +93,10 @@ export default function install(app: App, {
         }
     });
 
-    app.config.globalProperties.$t = function (this: ComponentI18nInstance, key: string, options?: TOptions | string): string {
+    app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key, options) {
         usingTranslation(); // called during render, so we will get re-rendered when translations change
-        return this.__translate(key, options);
-    };
+        return (this?.__translate ?? genericT)(key, options);
+    } as SimpleTFunction;
     app.config.globalProperties.$i18next = i18next;
 
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
@@ -138,5 +139,17 @@ export default function install(app: App, {
             }
         }
         return { lng, ns, keyPrefix };
+    }
+}
+
+export function useTranslation() {
+    const instance = getCurrentInstance();
+    if (!instance) {
+        throw new Error("vue-i18n: No Vue instance in context. Make sure to register the vue-i18next plugin using app.use(...).");
+    }
+    const globalProps = instance.appContext.config.globalProperties;
+    return {
+        i18next: globalProps.$i18next as i18n,
+        t: globalProps.$t as SimpleTFunction
     }
 }
