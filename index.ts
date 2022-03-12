@@ -27,7 +27,7 @@ declare module "vue/types/options" {
 
 interface VueI18NextOptions {
     i18next: i18n;
-    rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed' | 'loaded')[];
+    rerenderOn?: ('initialized' | 'languageChanged' | 'loaded' | 'added' | 'removed')[];
 }
 
 export default function install(Vue: typeof _Vue, {
@@ -40,7 +40,17 @@ export default function install(Vue: typeof _Vue, {
     const changeTracker = Vue.observable({ lastI18nChange: new Date() });
     const invalidate: () => void = () => changeTracker.lastI18nChange = new Date();
     const usingTranslation: () => void = () => changeTracker.lastI18nChange;
-    rerenderOn.forEach(event => i18next.on(event, invalidate))
+    rerenderOn.forEach(event => {
+        switch (event) {
+            case 'added':
+            case 'removed':
+                i18next.store?.on(event, invalidate);
+                break;
+            default:
+                i18next.on(event, invalidate)
+                break;
+        }
+    })
 
     Vue.mixin({
         beforeCreate() {
@@ -75,29 +85,31 @@ export default function install(Vue: typeof _Vue, {
                 ns = [localNs].concat(ns ?? []); // add component-local namespace, thus finding and preferring local translations
             }
 
-            // Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option.
             const t = getTranslationFunction(lng, ns);
             this.__translate = (key: string, options?: TOptions | string): string => {
                 if (!keyPrefix || includesNs(key)) {
                     return t(key, options);
                 } else { // adding keyPrefix only if key is not namespaced
-                    return t(keyPrefix + key, options);
+                    return t(keyPrefix + '.' + key, options);
                 }
             };
         },
         destroyed(this: _Vue) {
-            //FIXME: das ist doch Quatsch, weil es auf Instanzebene passiert und nicht, wenn die letzte Instanz verschwindet -> reference counting - per component???
-            // andererseits ist die Registrierung auch pro Instanz (was unnötig ist)
             this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
         }
     });
 
     Vue.prototype.$t = function (this: _Vue, key: string, options?: TOptions | string): string {
         usingTranslation(); // called during render, so we will get re-rendered when translations change
-        return this.__translate(key, options);
+        if (i18next.isInitialized) {
+            return this.__translate(key, options);
+        } else {
+            return key;
+        }
     };
     Vue.prototype.$i18next = i18next;
 
+    /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
         if (lng) {
             return i18next.getFixedT(lng, ns);
