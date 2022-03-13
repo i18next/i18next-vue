@@ -41,7 +41,17 @@ export default function install(app: App, {
     const lastI18nChange = ref(new Date());
     const invalidate: () => void = () => lastI18nChange.value = new Date();
     const usingTranslation: () => void = () => lastI18nChange.value;
-    rerenderOn.forEach(event => i18next.on(event, invalidate))
+    rerenderOn.forEach(event => {
+        switch (event) {
+            case 'added':
+            case 'removed':
+                i18next.store?.on(event, invalidate);
+                break;
+            default:
+                i18next.on(event, invalidate)
+                break;
+        }
+    })
 
     app.mixin({
         beforeCreate(this: ComponentI18nInstance) {
@@ -75,30 +85,31 @@ export default function install(app: App, {
                 ns = [localNs].concat(ns ?? []); // add component-local namespace, thus finding and preferring local translations
             }
 
-            // Translation function respecting lng and ns.
-            // The namespace can be overriden in $t calls using a key prefix or the 'ns' option.
             const t = getTranslationFunction(lng, ns);
             this.__translate = (key, options) => {
                 if (!keyPrefix || includesNs(key)) {
                     return t(key, options);
                 } else { // adding keyPrefix only if key is not namespaced
-                    return t(keyPrefix + key, options);
+                    return t(keyPrefix + '.' + key, options);
                 }
             };
         },
         unmounted(this: ComponentI18nInstance) {
-            //FIXME: das ist doch Quatsch, weil es auf Instanzebene passiert und nicht, wenn die letzte Instanz verschwindet -> reference counting - per component???
-            // andererseits ist die Registrierung auch pro Instanz (was unnötig ist)
             this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
         }
     });
 
     app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key, options) {
         usingTranslation(); // called during render, so we will get re-rendered when translations change
-        return (this?.__translate ?? genericT)(key, options);
+        if (i18next.isInitialized) {
+            return (this?.__translate ?? genericT)(key, options);
+        } else {
+            return key;
+        }
     } as SimpleTFunction;
     app.config.globalProperties.$i18next = i18next;
 
+    /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
         if (lng) {
             return i18next.getFixedT(lng, ns);
