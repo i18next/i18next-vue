@@ -10,13 +10,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Set up nodejs v15
+      - name: Set up nodejs v16
         uses: actions/setup-node@v1
         with:
-          node-version: '15'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Execute linter
-        run: npm run build
+      - name: Build docs
+        run: npm run docs:build
