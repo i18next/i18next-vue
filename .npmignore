@@ -1,7 +1,0 @@
-node_modules/
-.github
-.gitignore
-.npmignore
-index.ts
-package-lock.json
-tsconfig.json
