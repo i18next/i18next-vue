@@ -156,7 +156,7 @@ export default function install(app: App, {
 export function useTranslation() {
     const instance = getCurrentInstance();
     if (!instance) {
-        throw new Error("vue-i18n: No Vue instance in context. Make sure to register the vue-i18next plugin using app.use(...).");
+        throw new Error("i18next-vue: No Vue instance in context. Make sure to register the i18next-vue plugin using app.use(...).");
     }
     const globalProps = instance.appContext.config.globalProperties;
     return {

@@ -1,4 +1,4 @@
-# vue-i18next
+# i18next-vue
 > Stripped-down version of the package described in <https://panter.github.io/vue-i18next/>
 
 ## Introduction
@@ -9,7 +9,7 @@ This library is a simple wrapper for [i18next](https://www.i18next.com), simplif
 ## Installation
 
 ```bash
-npm install @dotbase/vue-i18next@kkuegler/vue-i18next#vue-3
+npm install i18next-vue
 ```
 
 ## Initialisation
@@ -17,14 +17,14 @@ npm install @dotbase/vue-i18next@kkuegler/vue-i18next#vue-3
 ```typescript
 import Vue from "vue";
 import i18next from "i18next";
-import VueI18Next from "@dotbase/vue-i18next";
+import I18NextVue from "i18next-vue";
 import App from "./App.vue";
 
 /*const i18nInitialized = */i18next.init({ ... });
-createApp(App).use(VueI18Next, { i18next }).mount('#app') };
+createApp(App).use(I18NextVue, { i18next }).mount('#app') };
 
 // to wait for loading the translations first, do this instead:
-// i18nInitialized.then(() => createApp(App).use(VueI18Next, { i18next }).mount('#app'));
+// i18nInitialized.then(() => createApp(App).use(I18NextVue, { i18next }).mount('#app'));
 ```
 
 ## Usage
