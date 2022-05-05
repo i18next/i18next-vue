@@ -1,6 +1,6 @@
 {
   "name": "i18next-vue",
-  "description": "i18next integration for Vue",
+  "description": "i18next-vue docs",
   "version": "2.0.0-beta.0",
   "author": "dot.base <movebase@charite.de> (https://movebase.de)",
   "license": "MIT",
@@ -19,21 +19,15 @@
     "typescript"
   ],
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
-  },
-  "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
-  "peerDependencies": {
-    "i18next": ">=19",
-    "vue": "^3.2.31"
+    "docs:dev": "vuepress dev docs --temp docs/.temp",
+    "docs:build": "vuepress build docs --temp docs/.temp",
+    "docs:publish-main": "gh-pages -d docs/.vuepress/dist -r https://github.com/i18next/i18next-vue.git"
   },
   "devDependencies": {
-    "typescript": "^4.1.3",
-    "@babel/types": "^7.16.0"
+    "@vuepress/theme-vue": "^1.9.7",
+    "gh-pages": "^3.2.3",
+    "vue": "^2.6.14",
+    "vuepress": "^1.9.7"
   },
-  "files": [
-    "dist/**/*",
-    "types/**/*"
-  ]
+  "files": []
 }
