@@ -21,7 +21,7 @@ import I18NextVue from "i18next-vue";
 import App from "./App.vue";
 
 /*const i18nInitialized = */i18next.init({ ... });
-createApp(App).use(I18NextVue, { i18next }).mount('#app') };
+createApp(App).use(I18NextVue, { i18next }).mount('#app');
 
 // to wait for loading the translations first, do this instead:
 // i18nInitialized.then(() => createApp(App).use(I18NextVue, { i18next }).mount('#app'));
