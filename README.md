@@ -1,4 +1,4 @@
-# i18next-vue
+# i18next-vue <a href="https://www.npmjs.com/package/i18next-vue"><img src="https://badgen.net/npm/v/i18next-vue"></a> <img src="https://badgen.net/npm/types/i18next-vue">
 > Stripped-down version of the package described in <https://panter.github.io/vue-i18next/>
 
 ## Introduction
