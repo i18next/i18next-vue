@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "dry-publish": "npm publish --tag vue-2 --dry-run"
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
