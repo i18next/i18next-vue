@@ -5,7 +5,7 @@
 
 This library is a simple wrapper for [i18next](https://www.i18next.com), simplifying its use in Vue 2.
 
-There is alsa a [Vue 3 version of this package](https://github.com/i18next/i18next-vue).
+There is also a [Vue 3 version of this package](https://github.com/i18next/i18next-vue).
 
 ## Installation
 
