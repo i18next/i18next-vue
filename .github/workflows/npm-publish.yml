@@ -3,7 +3,7 @@ name: Publish to npm
 on:
   push:
     branches:
-      - master
+      - vue-2
 
 jobs:
   publish:
@@ -24,4 +24,5 @@ jobs:
       - name: Publish package to npm
         uses: JS-DevTools/npm-publish@v1
         with:
+          tag: 'vue-2'
           token: ${{ secrets.NPM_TOKEN }}
