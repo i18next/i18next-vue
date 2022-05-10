@@ -5,14 +5,14 @@ declare module "vue/types/vue" {
     interface Vue {
         $t: TFunction;
         $i18next: i18n;
-
-        __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-        __translate: (key: string, options?: TOptions | string) => string; // local to each component with an <i18n> block or i18nOptions
     }
 }
-
-
-type Messages = { [index: number]: string | Messages };
+type SimpleTFunction = (key: string, options?: TOptions | string) => string;
+type ComponentI18nInstance = Vue & {
+    __bundles?: Array<[string, string]>;  // the bundles loaded by the component
+    __translate?: SimpleTFunction; // local to each component with an <i18n> block or i18nOptions
+};
+type Messages = { [index: string]: string | Messages };
 declare module "vue/types/options" {
     interface ComponentOptions<V extends _Vue, Data, Methods, Computed, PropsDef, Props> {
         __i18n?: string[]; // due to package @intlify/vue-i18n-loader, each component with at least one <i18n> block has __i18n set
@@ -53,11 +53,10 @@ export default function install(Vue: typeof _Vue, {
     })
 
     Vue.mixin({
-        beforeCreate() {
+        beforeCreate(this: ComponentI18nInstance) {
             const options = this.$options;
             if (!options.__i18n && !options.i18nOptions) {
-                //FIXME: oder muss man es in dem Fall gar nicht zuweisen
-                this.__translate = genericT;
+                this.__translate = undefined;  // required to enable proxied access to `__translate` in the $t function
                 return;
             }
 
@@ -86,7 +85,7 @@ export default function install(Vue: typeof _Vue, {
             }
 
             const t = getTranslationFunction(lng, ns);
-            this.__translate = (key: string, options?: TOptions | string): string => {
+            this.__translate = (key, options) => {
                 if (!keyPrefix || includesNs(key)) {
                     return t(key, options);
                 } else { // adding keyPrefix only if key is not namespaced
@@ -94,19 +93,19 @@ export default function install(Vue: typeof _Vue, {
                 }
             };
         },
-        destroyed(this: _Vue) {
+        destroyed(this: ComponentI18nInstance) {
             this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
         }
     });
 
-    Vue.prototype.$t = function (this: _Vue, key: string, options?: TOptions | string): string {
+    Vue.prototype.$t = function (this: ComponentI18nInstance | undefined, key, options) {
         usingTranslation(); // called during render, so we will get re-rendered when translations change
         if (i18next.isInitialized) {
-            return this.__translate(key, options);
+            return (this?.__translate ?? genericT)(key, options);
         } else {
             return key;
         }
-    };
+    } as SimpleTFunction;
     Vue.prototype.$i18next = i18next;
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
