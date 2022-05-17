@@ -1,5 +1,4 @@
 # i18next-vue <a href="https://www.npmjs.com/package/i18next-vue"><img src="https://badgen.net/npm/v/i18next-vue"></a> <img src="https://badgen.net/npm/types/i18next-vue">
-> Stripped-down version of the package described in <https://panter.github.io/vue-i18next/>
 
 ## Introduction
 
@@ -30,8 +29,9 @@ createApp(App).use(I18NextVue, { i18next }).mount('#app');
 
 ## Usage
 
-Using the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
+Use the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
 
+There is [a full tutorial](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up i18next-vue. You can check out the [live demo version](https://codesandbox.io/s/i18next-vue-example-gi55to) version of it, too.
 ```vue
 <i18n>
 {
@@ -48,6 +48,8 @@ Using the `$t` function, which works analogously to the `t` function found in [i
     <span>{{ $t('insurance') }}</span>
 </template>
 ```
+
+To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/).
 
 ## Contributing
 
