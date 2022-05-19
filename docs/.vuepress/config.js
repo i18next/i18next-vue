@@ -10,7 +10,7 @@ module.exports = ctx => ({
   ],
   theme: '@vuepress/vue',
   themeConfig: {
-    repo: 'i18next/i18next-vue',
+    repo: 'https://github.com/i18next/i18next-vue/tree/vue-2',
     editLinks: true,
     docsDir: 'docs',
     docsBranch: 'vue-2-docs',
