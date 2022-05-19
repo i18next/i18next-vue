@@ -8,7 +8,7 @@ module.exports = ctx => ({
   head: [
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
   ],
-  theme: '@vuepress/vue',
+  theme: '@vuepress/theme-default',
   themeConfig: {
     repo: 'https://github.com/i18next/i18next-vue/tree/vue-2',
     editLinks: true,
