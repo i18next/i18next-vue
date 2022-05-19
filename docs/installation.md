@@ -1,20 +1,5 @@
 # Installation
 
-## Direct Download / CDN
-
-<https://unpkg.com/i18next/i18next-vue/dist/index.js>
-
-[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next/i18next-vue@1.0.0/dist/index.js>
-
-    
-```html    
-<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
-<script src="https://unpkg.com/i18next@21/i18next.js"></script>
-<script src="https://unpkg.com/i18next/i18next-vue@1/dist/index.js"></script>
-```
-
-You need to explicitly install the `i18next-vue` plugin via `Vue.use(I18NextVue, { i18next });`
-
 ## Using a package manager
 If you use some bundler like Webpack, Vite, etc. you can install i18next-vue like this:
 
@@ -49,6 +34,21 @@ import I18NextVue from 'i18next-vue';
 i18next.init({/*...*/});
 Vue.use(I18NextVue, { i18next });
 ```
+
+## Direct Download / CDN
+
+<https://unpkg.com/i18next/i18next-vue/dist/index.js>
+
+[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next/i18next-vue@1.0.0/dist/index.js>
+
+    
+```html    
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/i18next@21/i18next.js"></script>
+<script src="https://unpkg.com/i18next/i18next-vue@1/dist/index.js"></script>
+```
+
+You need to explicitly install the `i18next-vue` plugin via `Vue.use(I18NextVue, { i18next });`
 
 ## Dev Build
 
