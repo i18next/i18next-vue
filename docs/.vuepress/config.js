@@ -12,6 +12,7 @@ module.exports = ctx => ({
   themeConfig: {
     repo: 'i18next/i18next-vue',
     editLinks: true,
+    docsBranch: 'docs',
     docsDir: 'docs',
     locales: {
       '/': {
