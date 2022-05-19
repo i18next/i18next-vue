@@ -1,9 +1,7 @@
-# Migration
-
-## From [@panter/vue-i18next](https://panter.github.io/vue-i18next/)
+# Migration from [@panter/vue-i18next](https://panter.github.io/vue-i18next/)
 This package has some breaking changes compared to the @panter version.
 
-### Features no longer supported
+## Features no longer supported
 - The `<i18next>` component has been removed. Please use `$t` instead.
 - The `v-t` directive has been removed. Please use `$t`  instead.
 - The `v-waitForT` directive has been removed. Potentially use `v-if="$i18next.initialized"` or hold off mounting Vue until i18next has been initialized:
@@ -16,7 +14,7 @@ i18nInitialized.then(() => {
 });
 ```
 
-### API changes
+## API changes
 - `i18nOptions` are no longer inherited by child components. Each component is independent.
 - `$i18n.i18next` is now `$i18next`. `$i18n` itself has been removed.
 - Initialization changed from
@@ -40,5 +38,5 @@ app.mount('#app');
   - `loadComponentNamespace` has been removed without replacement.
   - `bindI18n` and `bindStore` have been replaced by [the `rerenderOn` option](./guide/started.md#plugin-options)
 
-### Other changes
+## Other changes
 The minimum tested i18next version is now 19.
