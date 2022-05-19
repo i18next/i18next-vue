@@ -13,6 +13,7 @@ module.exports = ctx => ({
     repo: 'i18next/i18next-vue',
     editLinks: true,
     docsDir: 'docs',
+    docsBranch: 'vue-2-docs',
     locales: {
       '/': {
         label: 'English',
