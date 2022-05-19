@@ -26,6 +26,13 @@ module.exports = ctx => ({
             link: '/guide/started.md',
           },
           {
+            text: 'v1.x (Vue 2)',
+            ariaLabel: 'Version Menu',
+            items: [
+              { text: 'v2.x (Vue 3)', link: 'https://i18next.github.io/i18next-vue/' }
+            ]
+          },
+          {
             text: 'Release Notes',
             link: 'https://github.com/i18next/i18next-vue/releases'
           }

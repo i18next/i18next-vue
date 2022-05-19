@@ -11,6 +11,8 @@ i18next-vue brings Vue support for i18next and provides:
 
 Let's [Get Started](./guide/started.md)!
 
-:::warning Notice
-:warning: This documentation is for `i18next-vue` v1.x.
+::: tip Note
+This documentation is for `i18next-vue` v1.x, the Vue 2 version.
+
+There is separate [docs for the Vue 3 version](https://i18next.github.io/i18next-vue/).
 :::
