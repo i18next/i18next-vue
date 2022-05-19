@@ -52,7 +52,13 @@ module.exports = ctx => ({
               '/guide/ssr.md',
             ]
           },
-          '/migration.md',
+          {
+            title: 'Migration',
+            collapsable: false,
+            children: [
+              '/migration.md',
+            ]
+          }
         ]
       }
     }
