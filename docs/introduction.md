@@ -14,5 +14,5 @@ Let's [Get Started](./guide/started.md)!
 ::: tip Note
 This documentation is for `i18next-vue` v2.x, the Vue 3 version.
 
-There is separate [docs for the Vue 2 version](https://i18next.github.io/i18next-vue/vue-2/).
+There is separate [docs for the Vue 2 version](https://i18next.github.io/i18next-vue/vue-2/introduction).
 :::
