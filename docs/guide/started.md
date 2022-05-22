@@ -32,6 +32,8 @@ pnpm add i18next-vue
 
 See the [i18next docs](https://www.i18next.com/overview/api#init) for setting it up. `i18next-vue` does not need a lot of setup on top of that.
 
+If you have no i18next setup yet, you can also check out [this tutorial blogpost](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up both i18next and i18next-vue.
+
 ```javascript
 import { createApp } from 'vue';
 import i18next from 'i18next';
