@@ -21,7 +21,7 @@
   "scripts": {
     "docs:dev": "vuepress dev docs --temp docs/.temp",
     "docs:build": "vuepress build docs --temp docs/.temp",
-    "docs:publish-main": "gh-pages -d docs/.vuepress/dist -r https://github.com/i18next/i18next-vue.git"
+    "docs:publish-main": "gh-pages -d docs/.vuepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets"
   },
   "devDependencies": {
     "@vuepress/theme-vue": "^1.9.7",
