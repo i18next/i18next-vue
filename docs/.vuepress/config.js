@@ -48,6 +48,7 @@ module.exports = ctx => ({
               '/guide/component.md',
               '/guide/i18n-options.md',
               '/guide/i18n.md',
+              '/guide/composition-api.md',
               '/guide/single-file-component.md',
               '/guide/ssr.md',
             ]
