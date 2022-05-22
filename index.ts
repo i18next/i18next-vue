@@ -36,11 +36,11 @@ export default function install(app: App, {
     rerenderOn = ['languageChanged', 'loaded', 'added', 'removed'],
 }: VueI18NextOptions): void {
     const genericT = i18next.t.bind(i18next);
-    // the ref (internally) tracks which Vue instances use translations and will automatically 
-    // trigger re-renders by Vue when the value of 'lastI18nChange' changes
+    // the ref (internally) tracks which Vue instances use translations
+    // Vue will automatically trigger re-renders when the value of 'lastI18nChange' changes
     const lastI18nChange = ref(new Date());
     const invalidate: () => void = () => lastI18nChange.value = new Date();
-    const usingTranslation: () => void = () => lastI18nChange.value;
+    const usingI18n: () => void = () => lastI18nChange.value;
     rerenderOn.forEach(event => {
         switch (event) {
             case 'added':
@@ -100,14 +100,20 @@ export default function install(app: App, {
     });
 
     app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key, options) {
-        usingTranslation(); // called during render, so we will get re-rendered when translations change
+        usingI18n(); // called during render, so we will get re-rendered when translations change
         if (i18next.isInitialized) {
             return (this?.__translate ?? genericT)(key, options);
         } else {
             return key;
         }
     } as SimpleTFunction;
-    app.config.globalProperties.$i18next = i18next;
+    // this proxy makes things like $i18next.language (basically) reactive
+    app.config.globalProperties.$i18next = new Proxy(i18next, {
+        get(target, prop) {
+            usingI18n();
+            return Reflect.get(target, prop);
+        }
+    });
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
