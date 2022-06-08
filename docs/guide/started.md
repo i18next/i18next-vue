@@ -5,19 +5,19 @@ Install the package via
 <code-group>
 <code-block title="npm">
 ```bash
-npm install i18next-vue@vue2
+npm install i18next-vue@vue-2
 ``` 
 </code-block>
 
 <code-block title="yarn">
 ```bash
-yarn add i18next-vue@vue2
+yarn add i18next-vue@vue-2
 ```
 </code-block>
 
 <code-block title="pnpm">
 ```bash
-pnpm add i18next-vue@vue2
+pnpm add i18next-vue@vue-2
 ```
 </code-block>
 </code-group>
