@@ -167,6 +167,6 @@ export function useTranslation() {
     const globalProps = instance.appContext.config.globalProperties;
     return {
         i18next: globalProps.$i18next as i18n,
-        t: globalProps.$t as SimpleTFunction
+        t: globalProps.$t.bind(instance.proxy) as SimpleTFunction
     }
 }
