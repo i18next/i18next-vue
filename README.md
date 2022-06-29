@@ -32,6 +32,11 @@ createApp(App).use(I18NextVue, { i18next }).mount('#app');
 Use the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
 
 There is [a full tutorial](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up i18next-vue. You can check out the [live demo version](https://codesandbox.io/s/i18next-vue-example-gi55to) version of it, too.
+
+To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/).
+
+### Simple example
+
 ```vue
 <i18n>
 {
@@ -45,11 +50,26 @@ There is [a full tutorial](https://dev.to/adrai/how-to-properly-internationalize
 </i18n>
 
 <template>
-    <span>{{ $t('insurance') }}</span>
+    <h1>A test in {{ $i18next.language }}</h1>
+    <p>{{ $t('insurance') }}</p>
 </template>
 ```
 
-To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/).
+Using the composition API you can access the i18next instance and `t()` as well:
+```vue
+<script setup>
+import { computed } from "vue";
+import { useTranslation } from "i18next-vue";
+const { i18next, t } = useTranslation();
+const term = computed(() => t("insurance"));
+</script>
+
+<template>
+  <h1>A test in {{ i18next.language }}</h1>
+  <p>inline: {{ t("insurance") }}</p>
+  <p>computed: {{ term }}</p>
+</template>
+```
 
 ## Contributing
 
