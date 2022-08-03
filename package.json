@@ -1,39 +1,39 @@
 {
-  "name": "i18next-vue",
-  "description": "i18next integration for Vue",
-  "version": "2.0.0-beta.2",
-  "author": "dot.base <movebase@charite.de> (https://movebase.de)",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/i18next/i18next-vue.git"
-  },
-  "homepage": "https://github.com/i18next/i18next-vue",
-  "bugs": {
-    "url": "https://github.com/i18next/i18next-vue/issues"
-  },
-  "keywords": [
-    "i18n",
-    "i18next",
-    "vue",
-    "typescript"
-  ],
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
-  },
-  "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
-  "peerDependencies": {
-    "i18next": ">=19",
-    "vue": "^3.2.31"
-  },
-  "devDependencies": {
-    "typescript": "^4.1.3",
-    "@babel/types": "^7.16.0"
-  },
-  "files": [
-    "dist/**/*",
-    "types/**/*"
-  ]
+    "name": "i18next-vue",
+    "description": "i18next integration for Vue",
+    "version": "2.0.0-beta.3",
+    "author": "dot.base <movebase@charite.de> (https://movebase.de)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/i18next/i18next-vue.git"
+    },
+    "homepage": "https://github.com/i18next/i18next-vue",
+    "bugs": {
+        "url": "https://github.com/i18next/i18next-vue/issues"
+    },
+    "keywords": [
+        "i18n",
+        "i18next",
+        "vue",
+        "typescript"
+    ],
+    "scripts": {
+        "dev": "tsc --watch",
+        "build": "tsc"
+    },
+    "main": "./dist/index.js",
+    "types": "./types/index.d.ts",
+    "peerDependencies": {
+        "i18next": ">=19",
+        "vue": "^3.2.31"
+    },
+    "devDependencies": {
+        "typescript": "^4.1.3",
+        "@babel/types": "^7.16.0"
+    },
+    "files": [
+        "dist/**/*",
+        "types/**/*"
+    ]
 }
