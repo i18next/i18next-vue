@@ -1,4 +1,4 @@
-import { ref, getCurrentInstance, App, ComponentPublicInstance } from "vue";
+import { ref, getCurrentInstance, App, ComponentPublicInstance, FunctionalComponent } from "vue";
 import { i18n, TFunction, TOptions } from "i18next";
 
 declare module 'vue' {
@@ -53,6 +53,7 @@ export default function install(app: App, {
         }
     })
 
+    app.component('i18next', TranslationComponent);
     app.mixin({
         beforeCreate(this: ComponentI18nInstance) {
             const options = this.$options;
@@ -170,3 +171,24 @@ export function useTranslation() {
         t: globalProps.$t.bind(instance.proxy) as SimpleTFunction
     }
 }
+
+// pattern matches '{ someSlot }'
+const slotNamePattern = new RegExp('{\\s*([a-z0-9\\-]+)\\s*}', 'gi');
+export const TranslationComponent: FunctionalComponent<{ translation: string }> = function ({ translation }, { slots }) {
+    const result = [];
+
+    let match;
+    let lastIndex = 0;
+    while ((match = slotNamePattern.exec(translation)) !== null) {
+        result.push(translation.substring(lastIndex, match.index))
+        const slot = slots[match[1]];
+        if (slot) {
+            result.push(...slot());
+        } else {
+            result.push(match[0]);
+        }
+        lastIndex = slotNamePattern.lastIndex;
+    }
+    result.push(translation.substring(lastIndex))
+    return result;
+};
