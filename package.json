@@ -19,9 +19,9 @@
     "typescript"
   ],
   "scripts": {
-    "docs-dev": "vuepress dev docs --temp docs/.temp",
-    "docs-build": "vuepress build docs --temp docs/.temp",
-    "docs-publish-vue-2": "gh-pages -d docs/.vuepress/dist --dest vue-2 -r https://github.com/i18next/i18next-vue.git"
+    "dev": "vuepress dev docs --temp docs/.temp",
+    "build": "vuepress build docs --temp docs/.temp",
+    "publish-vue-2": "gh-pages -d docs/.vuepress/dist --dest vue-2 -r https://github.com/i18next/i18next-vue.git"
   },
   "devDependencies": {
     "@vuepress/theme-vue": "^1.9.7",

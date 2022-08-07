@@ -19,4 +19,4 @@ jobs:
         run: npm install
 
       - name: Build docs
-        run: npm run docs:build
+        run: npm run build
