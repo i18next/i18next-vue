@@ -106,7 +106,13 @@ export default function install(Vue: typeof _Vue, {
             return key;
         }
     } as SimpleTFunction;
-    Vue.prototype.$i18next = i18next;
+    Vue.prototype.$i18next = typeof Proxy === 'function' ?
+        new Proxy(i18next, {
+            get(target, prop) {
+                usingTranslation();
+                return Reflect.get(target, prop);
+            }
+        }) : i18next;
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
