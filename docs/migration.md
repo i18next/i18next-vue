@@ -4,7 +4,7 @@ This package has some breaking changes compared to the @panter version.
 ## Features no longer supported
 - The `<i18next>` component has been removed in version 1.x of this plugin, but will be re-introduced in 2.x (for Vue 3). Please use `$t` for 1.x instead.
 - The `v-t` directive has been removed. Please use `$t`  instead.
-- The `v-waitForT` directive has been removed. Potentially use `v-if="$i18next.initialized"` or hold off mounting Vue until i18next has been initialized:
+- The `v-waitForT` directive has been removed. Use `v-if="$i18next.isInitialized"` or hold off mounting Vue until i18next has been initialized:
 ```js
 const i18nInitialized = i18next.init({ ... });
 Vue.use(I18NextVue, { i18next });
