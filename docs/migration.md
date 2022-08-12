@@ -3,7 +3,7 @@ This package has some breaking changes compared to the @panter version.
 
 ## Features no longer supported
 - The `v-t` directive has been removed. Please use `$t` instead.
-- The `v-waitForT` directive has been removed. Use `v-if="$i18next.initialized"` or hold off mounting Vue until i18next has been initialized:
+- The `v-waitForT` directive has been removed. Use `v-if="$i18next.isInitialized"` or hold off mounting Vue until i18next has been initialized:
 ```js
 const i18nInitialized = i18next.init({ ... });
 const app = createApp(/* ... */);
