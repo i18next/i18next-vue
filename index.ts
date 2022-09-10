@@ -1,4 +1,5 @@
-import _Vue from "vue";
+import _Vue, { FunctionalComponentOptions, VNode } from "vue";
+import type { RecordPropsDefinition } from "vue/types/options";
 import { i18n, TFunction, TOptions } from "i18next";
 
 declare module "vue/types/vue" {
@@ -156,4 +157,42 @@ export default function install(Vue: typeof _Vue, {
         }
         return { lng, ns, keyPrefix };
     }
+
+    // pattern matches '{ someSlot }'
+    const slotNamePattern = new RegExp('{\\s*([a-z0-9\\-]+)\\s*}', 'gi');
+    const TranslationComponent:
+        FunctionalComponentOptions<
+            { translation: string },
+            RecordPropsDefinition<{ translation: string; }>
+        > = {
+        functional: true,
+        props: {
+            translation: {
+                type: String,
+                required: true,
+            }
+        },
+        render(_createElement, context) {
+            const textNode: (t: string) => VNode = (context as any)._v; // createTextVNode internal API
+            const translation = context.props.translation;
+            const result: VNode[] = [];
+
+            let match;
+            let lastIndex = 0;
+            while ((match = slotNamePattern.exec(translation)) !== null) {
+                result.push(textNode(translation.substring(lastIndex, match.index)))
+                const slot = context.scopedSlots[match[1]];
+                if (slot) {
+                    const nodes = slot({})
+                    nodes?.forEach(n => result.push(n))
+                } else {
+                    result.push(textNode(match[0]));
+                }
+                lastIndex = slotNamePattern.lastIndex;
+            }
+            result.push(textNode(translation.substring(lastIndex)))
+            return result;
+        }
+    };
+    Vue.component('i18next', TranslationComponent);
 }
