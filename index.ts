@@ -1,4 +1,4 @@
-import { ref, getCurrentInstance, App, ComponentPublicInstance, FunctionalComponent } from "vue";
+import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent } from "vue";
 import { i18n, TFunction, TOptions } from "i18next";
 
 declare module 'vue' {
@@ -174,21 +174,31 @@ export function useTranslation() {
 
 // pattern matches '{ someSlot }'
 const slotNamePattern = new RegExp('{\\s*([a-z0-9\\-]+)\\s*}', 'gi');
-export const TranslationComponent: FunctionalComponent<{ translation: string }> = function ({ translation }, { slots }) {
-    const result = [];
-
-    let match;
-    let lastIndex = 0;
-    while ((match = slotNamePattern.exec(translation)) !== null) {
-        result.push(translation.substring(lastIndex, match.index))
-        const slot = slots[match[1]];
-        if (slot) {
-            result.push(...slot());
-        } else {
-            result.push(match[0]);
+export const TranslationComponent = defineComponent({
+    props: {
+        "translation": {
+            type: String,
+            required: true
         }
-        lastIndex = slotNamePattern.lastIndex;
+    },
+    setup({ translation }, { slots }) {
+        return () => {
+            const result = [];
+
+            let match;
+            let lastIndex = 0;
+            while ((match = slotNamePattern.exec(translation)) !== null) {
+                result.push(translation.substring(lastIndex, match.index))
+                const slot = slots[match[1]];
+                if (slot) {
+                    result.push(...slot());
+                } else {
+                    result.push(match[0]);
+                }
+                lastIndex = slotNamePattern.lastIndex;
+            }
+            result.push(translation.substring(lastIndex))
+            return result;
+        };
     }
-    result.push(translation.substring(lastIndex))
-    return result;
-};
+});
