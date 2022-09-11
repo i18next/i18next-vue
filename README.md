@@ -1,5 +1,4 @@
 # i18next-vue <a href="https://www.npmjs.com/package/i18next-vue/v/vue-2"><img src="https://badgen.net/npm/v/i18next-vue/vue-2"></a> <img src="https://badgen.net/npm/types/i18next-vue">
-> Stripped-down version of the package described in <https://panter.github.io/vue-i18next/>
 
 ## Introduction
 
@@ -34,7 +33,10 @@ i18next.init({ ... });
 
 ## Usage
 
-Using the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
+Use the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
+
+To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/vue-2/).
+### Simple example
 
 ```vue
 <i18n>
@@ -49,7 +51,8 @@ Using the `$t` function, which works analogously to the `t` function found in [i
 </i18n>
 
 <template>
-    <span>{{ $t('insurance') }}</span>
+    <h1>A test in {{ $i18next.language }}</h1>
+    <p>{{ $t('insurance') }}</p>
 </template>
 ```
 
