@@ -46,6 +46,7 @@ module.exports = ctx => ({
             children: [
               '/guide/started.md',
               '/guide/component.md',
+              '/guide/component-interpolation.md',
               '/guide/i18n-options.md',
               '/guide/i18n.md',
               '/guide/composition-api.md',
