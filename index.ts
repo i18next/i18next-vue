@@ -181,8 +181,9 @@ export const TranslationComponent = defineComponent({
             required: true
         }
     },
-    setup({ translation }, { slots }) {
+    setup(props, { slots }) {
         return () => {
+            const translation = props.translation;
             const result = [];
 
             let match;
