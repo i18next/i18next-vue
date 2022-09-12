@@ -1,4 +1,4 @@
-# Component based localization
+# Component-based localization
 
 In general, locale info (e.g. `locale`,`messages`, etc) is set in the `i18next` instance and passed to the i18next-vue Vue plugin during [initialization](./started.md#setup).
 
