@@ -1,7 +1,7 @@
 # Installation
 
 ## Using a package manager
-If you use some bundler like Webpack, Vite, etc. you can install i18next-vue like this:
+If you use a bundler like Webpack, Vite, etc. you can install i18next-vue like this:
 
 <code-group>
 <code-block title="npm">
@@ -38,15 +38,15 @@ app.use(I18NextVue, { i18next });
 
 ## Direct Download / CDN
 
-<https://unpkg.com/i18next/i18next-vue/dist/index.js>
+<https://unpkg.com/i18next-vue/dist/index.js>
 
-[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next/i18next-vue@2.0.0/dist/index.js>
+[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next-vue@2.0.0-beta.5/dist/index.js>
 
     
 ```html    
 <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
 <script src="https://unpkg.com/i18next@21/i18next.js"></script>
-<script src="https://unpkg.com/i18next/i18next-vue@2/dist/index.js"></script>
+<script src="https://unpkg.com/i18next-vue/dist/index.js"></script>
 ```
 
 You need to explicitly install the `i18next-vue` plugin via `app.use(I18NextVue, { i18next });`

@@ -4,7 +4,7 @@ by [@kazupon](https://github.com/kazupon)
 
 Single File Components can have an `<i18n>` block for defining translations locally in the component.
 
-```html
+```vue
 <i18n> { "en": { "hello": "hello world!" } } </i18n>
 
 <template>

@@ -2,7 +2,7 @@
 
 Instead of interpolating values with <code v-pre>{{ someValue }}</code> in the translations you can also interpolate markup (including Vue components) by using the `<i18next>` component and [named slots](https://vuejs.org/guide/components/slots.html#named-slots). These can be refrenced as `{ someSlot }` in the translations (mind the single curly braces).
 
-This way you can move blocks of markup around freely in the tranlations.
+This way you can move blocks of markup around freely in the translations.
 
 ## Simple example
 

@@ -35,8 +35,8 @@ app.mount('#app');
 ```
 - Plugin options 
   - `loadComponentNamespace` has been removed without replacement.
-  - `bindI18n` and `bindStore` have been replaced by [the `rerenderOn` option](./guide/started.md#plugin-options)
-- The `<i18next>` component now uses named slots and the `:translation` prop. The slot contents can be used as `{nameOfSlot}` in the translated message. See the example below how to replace the `tag`, `path` and `place` props, that are no longer supported.
+  - `bindI18n` and `bindStore` have been replaced by [the `rerenderOn` option](guide/started.md#plugin-options)
+- The [`<i18next>` component](guide/component-interpolation.md) now uses named slots and the `:translation` prop. The slot contents can be used as `{nameOfSlot}` in the translated message. See the example below how to replace the `tag`, `path` and `place` props. These are no longer supported.
 ```vue
 // old @panter/vue-i18next
 <template>

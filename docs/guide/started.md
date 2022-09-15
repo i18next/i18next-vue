@@ -30,7 +30,7 @@ pnpm add i18next-vue
 
 ## Setup
 
-See the [i18next docs](https://www.i18next.com/overview/api#init) for setting it up. `i18next-vue` does not need a lot of setup on top of that.
+See the [i18next documentation](https://www.i18next.com/overview/api#init) for setting it up. `i18next-vue` does not need a lot of setup on top of that.
 
 If you have no i18next setup yet, you can also check out [this tutorial blogpost](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up both i18next and i18next-vue.
 
@@ -52,7 +52,7 @@ app.mount('#app')
 ```
 
 ## Simple usage
-Use the instance function `$t` in your Vue components to translate. See [Component based localization](./component.md) for more details.
+Use the instance function `$t` in your Vue components to translate. See [Component-based localization](component.md) for more details.
 The [i18next documentation](https://www.i18next.com/) details all the translation options available through `$t()` (also known as [`t()` in the i18next docs](https://www.i18next.com/overview/api#t)).
 
 ```vue
@@ -60,7 +60,7 @@ The [i18next documentation](https://www.i18next.com/) details all the translatio
     <div class="container">
      {{$t("greeter.hello-world" }}
     </div>
-<template>
+</template>
 
 <script>
 export default({
@@ -88,5 +88,5 @@ app.use(I18NextVue, {
 | Name | | Description |
 | --- | --- | --- |
 | **i18next** | Required | The 'i18next' instance to use. |
-| **rerenderOn** | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values includ: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
+| **rerenderOn** | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values include: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
 
