@@ -29,11 +29,11 @@ createApp(App).use(I18NextVue, { i18next }).mount('#app');
 
 ## Usage
 
-Use the `$t` function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
+Use the `$t` translation function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
 
 There is [a full tutorial](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up i18next-vue. You can check out the [live demo version](https://codesandbox.io/s/i18next-vue-example-gi55to) version of it, too.
 
-To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/).
+To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/). This also outlines the migration path from @panter/vue-i18next.
 
 ### Simple example
 
