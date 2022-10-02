@@ -40,7 +40,7 @@ app.use(I18NextVue, { i18next });
 
 <https://unpkg.com/i18next-vue/dist/index.js>
 
-[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next-vue@2.0.0-beta.5/dist/index.js>
+[unpkg.com](https://unpkg.com) provides NPM-based CDN links. The above link will always point to the latest release on NPM. You can also use a specific version/tag via URLs like <https://unpkg.com/i18next-vue@2.0.0/dist/index.js>
 
     
 ```html    
