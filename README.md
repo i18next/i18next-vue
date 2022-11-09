@@ -74,4 +74,4 @@ const term = computed(() => t("insurance"));
 ## Contributing
 
 ### Requirements
-- node.js >= v15
+- node.js >= v16

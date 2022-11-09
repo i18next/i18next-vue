@@ -8,15 +8,15 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up nodejs v15
-        uses: actions/setup-node@v1
+      - name: Set up nodejs v16
+        uses: actions/setup-node@v3
         with:
-          node-version: '15'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Execute linter
+      - name: Execute build
         run: npm run build
