@@ -22,7 +22,7 @@
         "dev": "npm run build -- --watch index.ts",
         "build": "tsup index.ts --format cjs,esm --dts"
     },
-    "module": "CommonJS",
+    "module": "./dist/index.mjs",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
