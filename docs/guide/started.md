@@ -58,7 +58,7 @@ The [i18next documentation](https://www.i18next.com/) details all the translatio
 ```vue
 <template>
     <div class="container">
-     {{$t("greeter.hello-world" }}
+     {{ $t("greeter.hello-world") }}
     </div>
 </template>
 
