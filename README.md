@@ -102,7 +102,7 @@ const { t } = useTranslation();
 #### Custom slot values
 
 Custom slot values may be useful when default braces (`{` and `}`) are wrongly treated by the
-[Locise](https://github.com/locize/i18next-locize-backend) service or don't satisfy other needs.
+[Locize](https://github.com/locize/i18next-locize-backend) service or don't satisfy other needs.
 
 Use custom values for recognizing start and end of the insertion point of the `TranslationComponent`
 inside localization term:
