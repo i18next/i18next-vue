@@ -35,7 +35,7 @@ interface VueI18NextOptions {
     rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed')[];
     // Optional custom pattern for matching slot start of the `TranslationComponent.
     slotStart?: string,
-    // Optional custom pattern for matching slot start of the `TranslationComponent.
+    // Optional custom pattern for matching slot end of the `TranslationComponent.
     slotEnd?: string,
 }
 
