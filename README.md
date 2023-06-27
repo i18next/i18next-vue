@@ -106,16 +106,16 @@ Custom slot values may be useful when default braces (`{` and `}`) are wrongly t
 
 Use custom values for recognizing start and end of the insertion point of the `TranslationComponent`
 inside localization term:
-```vue
+```js
 // main.js
 app.use(I18NextVue, {
     i18next,
     slotStart: '<slot>',
     slotEnd: '</slot>',
 });
-
+```
+```vue
 // component.vue
-
 <i18n>
 {
     "en": {
