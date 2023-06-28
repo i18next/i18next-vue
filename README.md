@@ -84,19 +84,14 @@ const term = computed(() => t("insurance"));
 </i18n>
 
 <template>
-  <TranslationComponent :translation="t('message')">
+  <TranslationComponent :translation="$t('message')">
     <template #faq-link>
       <router-link :to="FAQ_ROUTE">
-        {{ t('faq') }}
+        {{ $t('faq') }}
       </router-link>
     </template>
   </TranslationComponent>
 </template>
-
-<script setup>
-import { useTranslation, TranslationComponent } from "i18next-vue";
-const { t } = useTranslation();
-</script>
 ```
 
 #### Custom slot values
@@ -115,7 +110,7 @@ app.use(I18NextVue, {
 });
 ```
 ```vue
-// component.vue
+<!-- Component.vue -->
 <i18n>
 {
     "en": {
@@ -126,19 +121,14 @@ app.use(I18NextVue, {
 </i18n>
 
 <template>
-  <TranslationComponent :translation="t('message')">
+  <TranslationComponent :translation="$t('message')">
     <template #faq-link>
       <router-link :to="FAQ_ROUTE">
-        {{ t('faq') }}
+        {{ $t('faq') }}
       </router-link>
     </template>
   </TranslationComponent>
 </template>
-
-<script setup>
-import { useTranslation, TranslationComponent } from "i18next-vue";
-const { t } = useTranslation();
-</script>
 ```
 
 ## Contributing
