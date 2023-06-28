@@ -84,23 +84,23 @@ const term = computed(() => t("insurance"));
 </i18n>
 
 <template>
-  <TranslationComponent :translation="$t('message')">
+  <i18next :translation="$t('message')">
     <template #faq-link>
       <router-link :to="FAQ_ROUTE">
         {{ $t('faq') }}
       </router-link>
     </template>
-  </TranslationComponent>
+  </i18next>
 </template>
 ```
 
 #### Custom slot values
 
-Custom slot values may be useful when default braces (`{` and `}`) are wrongly treated by the
+Custom slot values may be useful when the default braces (`{` and `}`) are wrongly treated by the
 [Locize](https://github.com/locize/i18next-locize-backend) service or don't satisfy other needs.
 
-Use custom values for recognizing start and end of the insertion point of the `TranslationComponent`
-inside localization term:
+Use custom values for recognizing start and end of the insertion points of the `<i18next>`/`TranslationComponent`
+inside the localization term:
 ```js
 // main.js
 app.use(I18NextVue, {
@@ -121,13 +121,13 @@ app.use(I18NextVue, {
 </i18n>
 
 <template>
-  <TranslationComponent :translation="$t('message')">
+  <i18next :translation="$t('message')">
     <template #faq-link>
       <router-link :to="FAQ_ROUTE">
         {{ $t('faq') }}
       </router-link>
     </template>
-  </TranslationComponent>
+  </i18next>
 </template>
 ```
 
