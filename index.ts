@@ -5,10 +5,6 @@ declare module 'vue' {
     interface ComponentCustomProperties {
         $t: TFunction;
         $i18next: i18n;
-        // Optional custom pattern for matching slot start of the `TranslationComponent. Internal.
-        $i18nextSlotStart?: string,
-        // Optional custom pattern for matching slot end of the `TranslationComponent. Internal.
-        $i18nextSlotEnd?: string,
     }
 }
 type SimpleTFunction = (key: string, options?: TOptions | string) => string;
@@ -33,17 +29,17 @@ declare module 'vue' {
 interface VueI18NextOptions {
     i18next: i18n;
     rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed')[];
-    // Optional custom pattern for matching slot start of the `TranslationComponent.
+    // Optional custom pattern for matching slot start of the `TranslationComponent.`
     slotStart?: string,
-    // Optional custom pattern for matching slot end of the `TranslationComponent.
+    // Optional custom pattern for matching slot end of the `TranslationComponent`.
     slotEnd?: string,
 }
 
 export default function install(app: App, {
     i18next,
     rerenderOn = ['languageChanged', 'loaded', 'added', 'removed'],
-    slotStart,
-    slotEnd,
+    slotStart = '{',
+    slotEnd = '}',
 }: VueI18NextOptions): void {
     const genericT = i18next.t.bind(i18next);
     // the ref (internally) tracks which Vue instances use translations
@@ -125,12 +121,7 @@ export default function install(app: App, {
             return Reflect.get(target, prop);
         }
     });
-    if (slotStart) {
-        app.config.globalProperties.$i18nextSlotStart = slotStart;
-    }
-    if (slotEnd) {
-        app.config.globalProperties.$i18nextSlotEnd = slotEnd;
-    }
+    app.config.globalProperties.$i18nextSlotNamePattern = slotNamePattern(slotStart, slotEnd);
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
@@ -194,7 +185,7 @@ function currentInstance() {
 }
 
 // pattern matches '{ someSlot }'
-function slotNamePattern({start = '{', end = '}'}) {
+function slotNamePattern(start: string, end: string) {
     const pattern = `${start}\\s*([a-z0-9\\-]+)\\s*${end}`;
     return new RegExp(pattern, 'gi');
 }
@@ -208,19 +199,13 @@ export const TranslationComponent = defineComponent({
     },
     setup(props, { slots }) {
         return () => {
+            const slotNamePattern = currentInstance().appContext.config.globalProperties.$i18nextSlotNamePattern;
             const translation = props.translation;
             const result = [];
 
             let match;
             let lastIndex = 0;
-
-            const globalProps = currentInstance().appContext.config.globalProperties;
-            const slotPattern = slotNamePattern({
-                start: globalProps.$i18nextSlotStart,
-                end: globalProps.$i18nextSlotEnd,
-            });
-
-            while ((match = slotPattern.exec(translation)) !== null) {
+            while ((match = slotNamePattern.exec(translation)) !== null) {
                 result.push(translation.substring(lastIndex, match.index))
                 const slot = slots[match[1]];
                 if (slot) {
@@ -228,7 +213,7 @@ export const TranslationComponent = defineComponent({
                 } else {
                     result.push(match[0]);
                 }
-                lastIndex = slotPattern.lastIndex;
+                lastIndex = slotNamePattern.lastIndex;
             }
             result.push(translation.substring(lastIndex))
             return result;
