@@ -29,11 +29,19 @@ declare module 'vue' {
 interface VueI18NextOptions {
     i18next: i18n;
     rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed')[];
+    // Optional custom pattern for matching slot start of the `TranslationComponent.`
+    slotStart?: string,
+    // Optional custom pattern for matching slot end of the `TranslationComponent`.
+    slotEnd?: string,
 }
+
+let slotPattern: RegExp;
 
 export default function install(app: App, {
     i18next,
     rerenderOn = ['languageChanged', 'loaded', 'added', 'removed'],
+    slotStart = '{',
+    slotEnd = '}',
 }: VueI18NextOptions): void {
     const genericT = i18next.t.bind(i18next);
     // the ref (internally) tracks which Vue instances use translations
@@ -116,6 +124,8 @@ export default function install(app: App, {
         }
     });
 
+    slotPattern = slotNamePattern(slotStart, slotEnd);
+
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
         if (lng) {
@@ -161,10 +171,7 @@ export default function install(app: App, {
 }
 
 export function useTranslation() {
-    const instance = getCurrentInstance();
-    if (!instance) {
-        throw new Error("i18next-vue: No Vue instance in context. Make sure to register the i18next-vue plugin using app.use(...).");
-    }
+    const instance = currentInstance();
     const globalProps = instance.appContext.config.globalProperties;
     return {
         i18next: globalProps.$i18next as i18n,
@@ -172,8 +179,20 @@ export function useTranslation() {
     }
 }
 
+function currentInstance() {
+    const instance = getCurrentInstance();
+    if (!instance) {
+        throw new Error("i18next-vue: No Vue instance in context. Make sure to register the i18next-vue plugin using app.use(...).");
+    }
+    return instance;
+}
+
 // pattern matches '{ someSlot }'
-const slotNamePattern = new RegExp('{\\s*([a-z0-9\\-]+)\\s*}', 'gi');
+function slotNamePattern(start: string, end: string) {
+    const pattern = `${start}\\s*([a-z0-9\\-]+)\\s*${end}`;
+    return new RegExp(pattern, 'gi');
+}
+
 export const TranslationComponent = defineComponent({
     props: {
         "translation": {
@@ -188,7 +207,7 @@ export const TranslationComponent = defineComponent({
 
             let match;
             let lastIndex = 0;
-            while ((match = slotNamePattern.exec(translation)) !== null) {
+            while ((match = slotPattern.exec(translation)) !== null) {
                 result.push(translation.substring(lastIndex, match.index))
                 const slot = slots[match[1]];
                 if (slot) {
@@ -196,7 +215,7 @@ export const TranslationComponent = defineComponent({
                 } else {
                     result.push(match[0]);
                 }
-                lastIndex = slotNamePattern.lastIndex;
+                lastIndex = slotPattern.lastIndex;
             }
             result.push(translation.substring(lastIndex))
             return result;

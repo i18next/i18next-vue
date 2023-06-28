@@ -71,6 +71,66 @@ const term = computed(() => t("insurance"));
 </template>
 ```
 
+### Translation component
+
+```vue
+<i18n>
+{
+    "en": {
+        "message": "Open the {faq-link} page."
+        "faq": "FAQ"
+    },
+}
+</i18n>
+
+<template>
+  <TranslationComponent :translation="$t('message')">
+    <template #faq-link>
+      <router-link :to="FAQ_ROUTE">
+        {{ $t('faq') }}
+      </router-link>
+    </template>
+  </TranslationComponent>
+</template>
+```
+
+#### Custom slot values
+
+Custom slot values may be useful when default braces (`{` and `}`) are wrongly treated by the
+[Locize](https://github.com/locize/i18next-locize-backend) service or don't satisfy other needs.
+
+Use custom values for recognizing start and end of the insertion point of the `TranslationComponent`
+inside localization term:
+```js
+// main.js
+app.use(I18NextVue, {
+    i18next,
+    slotStart: '<slot>',
+    slotEnd: '</slot>',
+});
+```
+```vue
+<!-- Component.vue -->
+<i18n>
+{
+    "en": {
+        "message": "Open the <slot>faq-link</slot> page."
+        "faq": "FAQ"
+    },
+}
+</i18n>
+
+<template>
+  <TranslationComponent :translation="$t('message')">
+    <template #faq-link>
+      <router-link :to="FAQ_ROUTE">
+        {{ $t('faq') }}
+      </router-link>
+    </template>
+  </TranslationComponent>
+</template>
+```
+
 ## Contributing
 
 ### Requirements
