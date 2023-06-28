@@ -35,6 +35,8 @@ interface VueI18NextOptions {
     slotEnd?: string,
 }
 
+let slotPattern: RegExp;
+
 export default function install(app: App, {
     i18next,
     rerenderOn = ['languageChanged', 'loaded', 'added', 'removed'],
@@ -121,7 +123,8 @@ export default function install(app: App, {
             return Reflect.get(target, prop);
         }
     });
-    app.config.globalProperties.$i18nextSlotNamePattern = slotNamePattern(slotStart, slotEnd);
+
+    slotPattern = slotNamePattern(slotStart, slotEnd);
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
@@ -199,13 +202,12 @@ export const TranslationComponent = defineComponent({
     },
     setup(props, { slots }) {
         return () => {
-            const slotNamePattern = currentInstance().appContext.config.globalProperties.$i18nextSlotNamePattern;
             const translation = props.translation;
             const result = [];
 
             let match;
             let lastIndex = 0;
-            while ((match = slotNamePattern.exec(translation)) !== null) {
+            while ((match = slotPattern.exec(translation)) !== null) {
                 result.push(translation.substring(lastIndex, match.index))
                 const slot = slots[match[1]];
                 if (slot) {
@@ -213,7 +215,7 @@ export const TranslationComponent = defineComponent({
                 } else {
                     result.push(match[0]);
                 }
-                lastIndex = slotNamePattern.lastIndex;
+                lastIndex = slotPattern.lastIndex;
             }
             result.push(translation.substring(lastIndex))
             return result;
