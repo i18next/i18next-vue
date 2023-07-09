@@ -134,4 +134,4 @@ app.use(I18NextVue, {
 ## Contributing
 
 ### Requirements
-- node.js >= v16
+- node.js >= v18

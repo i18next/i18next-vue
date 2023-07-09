@@ -2,14 +2,13 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "types",
-    "module": "CommonJS",
+    "module": "Node16",
     "outDir": "dist",
     "target": "ES2017",
     "removeComments": true,
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "Node16"
   },
   "include": [
     "index.ts"
