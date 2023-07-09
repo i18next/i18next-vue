@@ -1,10 +1,9 @@
 import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent } from "vue";
-import { i18n, TFunction, TOptions } from "i18next";
+import { i18n, TFunction } from "i18next";
 
-type SimpleTFunction = (key: string, options?: TOptions | string) => string;
 type ComponentI18nInstance = ComponentPublicInstance & {
     __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-    __translate?: SimpleTFunction; // local to each component with an <i18n> block or i18nOptions
+    __translate?: TFunction; // local to each component with an <i18n> block or i18nOptions
 };
 
 type Messages = { [index: string]: string | Messages };
@@ -93,27 +92,27 @@ export default function install(app: App, {
             }
 
             const t = getTranslationFunction(lng, ns);
-            this.__translate = (key, options) => {
-                if (!keyPrefix || includesNs(key)) {
+            this.__translate = ((key: string | string[], options: any) => {
+                if (!keyPrefix || typeof key !== 'string' || includesNs(key)) {
                     return t(key, options);
                 } else { // adding keyPrefix only if key is not namespaced
                     return t(keyPrefix + '.' + key, options);
                 }
-            };
+            }) as TFunction;
         },
         unmounted(this: ComponentI18nInstance) {
             this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
         }
     });
 
-    app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key, options) {
+    app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key: string | string[], options: any) {
         usingI18n(); // called during render, so we will get re-rendered when translations change
         if (i18next.isInitialized) {
             return (this?.__translate ?? genericT)(key, options);
         } else {
             return key;
         }
-    } as SimpleTFunction;
+    } as TFunction;
     // this proxy makes things like $i18next.language (basically) reactive
     app.config.globalProperties.$i18next = new Proxy(i18next, {
         get(target, prop) {
@@ -125,7 +124,7 @@ export default function install(app: App, {
     slotPattern = slotNamePattern(slotStart, slotEnd);
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
-    function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
+    function getTranslationFunction(lng?: string, ns?: string | readonly string[]): TFunction {
         if (lng) {
             return i18next.getFixedT(lng, ns);
         } else if (ns) {
@@ -142,11 +141,11 @@ export default function install(app: App, {
 
     function handleI18nOptions(options: any, loadBundle: (bundle: Messages) => void) {
         let lng: string | undefined;
-        let ns: string[] | undefined;
+        let ns: string | readonly string[] | undefined;
         let keyPrefix: string | undefined;
         if (options.i18nOptions) {
             let messages: Messages | undefined;
-            let namespaces: string | string[] | undefined;
+            let namespaces: string | readonly string[] | false | undefined;
             ({
                 lng,
                 namespaces = i18next.options.defaultNS,
@@ -159,7 +158,7 @@ export default function install(app: App, {
                 loadBundle(messages);
             }
 
-            ns = typeof namespaces === 'string' ? [namespaces] : namespaces;
+            ns = namespaces || undefined;
             if (ns) {
                 i18next.loadNamespaces(ns); // load configured namespaces
             }
@@ -173,7 +172,7 @@ export function useTranslation() {
     const globalProps = instance.appContext.config.globalProperties;
     return {
         i18next: globalProps.$i18next as i18n,
-        t: globalProps.$t.bind(instance.proxy) as SimpleTFunction
+        t: globalProps.$t.bind(instance.proxy) as TFunction
     }
 }
 
