@@ -1,8 +1,8 @@
 {
     "name": "i18next-vue",
     "description": "i18next integration for Vue",
-    "version": "2.2.0",
-    "author": "dot.base <movebase@charite.de> (https://movebase.de)",
+    "version": "2.2.1",
+    "author": "Konrad Kügler <swamblumat-git@yahoo.de>",
     "license": "MIT",
     "repository": {
         "type": "git",
