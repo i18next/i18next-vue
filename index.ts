@@ -1,4 +1,4 @@
-import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent } from "vue";
+import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent, VNode } from "vue";
 import { i18n, TFunction } from "i18next";
 
 type ComponentI18nInstance = ComponentPublicInstance & {
@@ -31,8 +31,6 @@ interface VueI18NextOptions {
     // Optional custom pattern for matching slot end of the `TranslationComponent`.
     slotEnd?: string,
 }
-
-let slotPattern: RegExp;
 
 export default function install(app: App, {
     i18next,
@@ -113,15 +111,23 @@ export default function install(app: App, {
             return key;
         }
     } as TFunction;
+
     // this proxy makes things like $i18next.language (basically) reactive
+    // we also use it to share some internal state with otherwise unrelated code, like the TranslationComponent
     app.config.globalProperties.$i18next = new Proxy(i18next, {
         get(target, prop) {
-            usingI18n();
-            return Reflect.get(target, prop);
+            switch (prop) {
+                case "__slotPattern": {
+                    return slotNamePattern(slotStart, slotEnd);
+                }
+                default: {
+                    usingI18n();
+                    return Reflect.get(target, prop);
+                }
+            }
         }
     });
 
-    slotPattern = slotNamePattern(slotStart, slotEnd);
 
     /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
     function getTranslationFunction(lng?: string, ns?: string | readonly string[]): TFunction {
@@ -167,6 +173,9 @@ export default function install(app: App, {
     }
 }
 
+interface Extendedi18n extends i18n {
+    __slotPattern: RegExp;
+}
 export function useTranslation() {
     const instance = currentInstance();
     const globalProps = instance.appContext.config.globalProperties;
@@ -198,9 +207,13 @@ export const TranslationComponent = defineComponent({
         }
     },
     setup(props, { slots }) {
+        const instance = currentInstance()
+        const globalProps = instance.appContext.config.globalProperties;
+        const slotPattern = (globalProps.$i18next as Extendedi18n).__slotPattern;
+
         return () => {
             const translation = props.translation;
-            const result = [];
+            const result: (string | VNode)[] = [];
 
             let match;
             let lastIndex = 0;
