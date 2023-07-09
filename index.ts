@@ -1,5 +1,5 @@
 import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent, VNode } from "vue";
-import { i18n, TFunction } from "i18next";
+import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
 type ComponentI18nInstance = ComponentPublicInstance & {
     __bundles?: Array<[string, string]>;  // the bundles loaded by the component
@@ -117,6 +117,9 @@ export default function install(app: App, {
     app.config.globalProperties.$i18next = new Proxy(i18next, {
         get(target, prop) {
             switch (prop) {
+                case "__usingI18n": {
+                    return usingI18n;
+                }
                 case "__slotPattern": {
                     return slotNamePattern(slotStart, slotEnd);
                 }
@@ -173,16 +176,44 @@ export default function install(app: App, {
     }
 }
 
+
 interface Extendedi18n extends i18n {
+    __usingI18n: () => void;
     __slotPattern: RegExp;
 }
-export function useTranslation() {
+interface UseTranslationOptions<TKPrefix = undefined> {
+    keyPrefix?: TKPrefix;
+    lng?: string | readonly string[]
+}
+
+export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N> = undefined>
+    (ns?: N, options?: UseTranslationOptions<TKPrefix>) {
     const instance = currentInstance();
     const globalProps = instance.appContext.config.globalProperties;
-    return {
-        i18next: globalProps.$i18next as i18n,
-        t: globalProps.$t.bind(instance.proxy) as TFunction
+    const i18next = globalProps.$i18next as Extendedi18n;
+    let t: TFunction<N, TKPrefix>
+
+    if (options?.lng) {
+        t = withAccessRecording(i18next.getFixedT(options.lng, ns, options?.keyPrefix), i18next.__usingI18n);
+    } else if (ns) {
+        t = withAccessRecording(i18next.getFixedT(null, ns, options?.keyPrefix), i18next.__usingI18n);
+    } else {
+        t = globalProps.$t.bind(instance.proxy);
     }
+    return {
+        i18next: i18next as i18n,
+        t
+    };
+}
+
+function withAccessRecording<T extends Function>(t: T, usingI18n: () => void): T {
+    return new Proxy(t, {
+        apply: function (target, thisArgument, argumentsList) {
+            console.log("recording access")
+            usingI18n();
+            return Reflect.apply(target, thisArgument, argumentsList)
+        }
+    }) as T;
 }
 
 function currentInstance() {
