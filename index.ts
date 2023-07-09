@@ -1,12 +1,6 @@
 import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent } from "vue";
 import { i18n, TFunction, TOptions } from "i18next";
 
-declare module 'vue' {
-    interface ComponentCustomProperties {
-        $t: TFunction;
-        $i18next: i18n;
-    }
-}
 type SimpleTFunction = (key: string, options?: TOptions | string) => string;
 type ComponentI18nInstance = ComponentPublicInstance & {
     __bundles?: Array<[string, string]>;  // the bundles loaded by the component
@@ -14,7 +8,7 @@ type ComponentI18nInstance = ComponentPublicInstance & {
 };
 
 type Messages = { [index: string]: string | Messages };
-declare module 'vue' {
+declare module '@vue/runtime-core' {
     interface ComponentCustomOptions {
         __i18n?: string[]; // due to package @intlify/vue-i18n-loader, each component with at least one <i18n> block has __i18n set
         i18nOptions?: {
@@ -23,6 +17,10 @@ declare module 'vue' {
             namespaces?: string | string[];
             messages?: Messages;
         }
+    }
+    interface ComponentCustomProperties {
+        $t: TFunction;
+        $i18next: i18n;
     }
 }
 
