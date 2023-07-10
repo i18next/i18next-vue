@@ -3,13 +3,12 @@ import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
 type ComponentI18nInstance = ComponentPublicInstance & {
     __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-    __translate?: TFunction; // local to each component with an <i18n> block or i18nOptions
+    __translate?: TFunction; // local to each component with i18nOptions
 };
 
 type Messages = { [index: string]: string | Messages };
 declare module '@vue/runtime-core' {
     interface ComponentCustomOptions {
-        __i18n?: string[]; // due to package @intlify/vue-i18n-loader, each component with at least one <i18n> block has __i18n set
         i18nOptions?: {
             lng?: string;
             keyPrefix?: string;
@@ -60,7 +59,7 @@ export default function install(app: App, {
     app.mixin({
         beforeCreate(this: ComponentI18nInstance) {
             const options = this.$options;
-            if (!options.__i18n && !options.i18nOptions) {
+            if (!options.i18nOptions) {
                 this.__translate = undefined;  // required to enable proxied access to `__translate` in the $t function
                 return;
             }
@@ -78,11 +77,6 @@ export default function install(app: App, {
                     this.__bundles!.push([lng, localNs]);
                 });
             }
-
-            // iterate all <i18n> blocks' contents as provided by @intlify/vue-i18n-loader and make them available to i18next
-            options.__i18n?.forEach(bundle => {
-                loadBundle(JSON.parse(bundle));
-            });
 
             let { lng, ns, keyPrefix } = handleI18nOptions(options, loadBundle);
             if (this.__bundles?.length) { // has local translations
