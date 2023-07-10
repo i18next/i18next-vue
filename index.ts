@@ -1,21 +1,8 @@
-import { ref, getCurrentInstance, App, ComponentPublicInstance, defineComponent, VNode } from "vue";
+import { ref, getCurrentInstance, App, defineComponent, VNode } from "vue";
 import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
-
-type ComponentI18nInstance = ComponentPublicInstance & {
-    __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-    __translate?: TFunction; // local to each component with i18nOptions
-};
 
 type Messages = { [index: string]: string | Messages };
 declare module '@vue/runtime-core' {
-    interface ComponentCustomOptions {
-        i18nOptions?: {
-            lng?: string;
-            keyPrefix?: string;
-            namespaces?: string | string[];
-            messages?: Messages;
-        }
-    }
     interface ComponentCustomProperties {
         $t: TFunction;
         $i18next: i18n;
@@ -37,7 +24,6 @@ export default function install(app: App, {
     slotStart = '{',
     slotEnd = '}',
 }: VueI18NextOptions): void {
-    const genericT = i18next.t.bind(i18next);
     // the ref (internally) tracks which Vue instances use translations
     // Vue will automatically trigger re-renders when the value of 'lastI18nChange' changes
     const lastI18nChange = ref(new Date());
@@ -56,63 +42,16 @@ export default function install(app: App, {
     })
 
     app.component('i18next', TranslationComponent);
-    app.mixin({
-        beforeCreate(this: ComponentI18nInstance) {
-            const options = this.$options;
-            if (!options.i18nOptions) {
-                this.__translate = undefined;  // required to enable proxied access to `__translate` in the $t function
-                return;
-            }
 
-            // each component gets its own 8-digit random namespace prefixed with its name if available
-            const name = this.$options.name;
-            const rand = ((Math.random() * 10 ** 8) | 0).toString();
-            const localNs = [name, rand].filter(x => !!x).join("-");
-
-            // used to store added resource bundle identifiers for later removal upen component destruction
-            this.__bundles = [];
-            const loadBundle = (bundle: Messages) => {
-                Object.entries(bundle).forEach(([lng, resources]) => {
-                    i18next.addResourceBundle(lng, localNs, resources, true, false);
-                    this.__bundles!.push([lng, localNs]);
-                });
-            }
-
-            let { lng, ns, keyPrefix } = handleI18nOptions(options, loadBundle);
-            if (this.__bundles?.length) { // has local translations
-                ns = [localNs].concat(ns ?? []); // add component-local namespace, thus finding and preferring local translations
-            }
-
-            const t = getTranslationFunction(lng, ns);
-            this.__translate = ((key: string | string[], options: any) => {
-                if (!keyPrefix || typeof key !== 'string' || includesNs(key)) {
-                    return t(key, options);
-                } else { // adding keyPrefix only if key is not namespaced
-                    return t(keyPrefix + '.' + key, options);
-                }
-            }) as TFunction;
-        },
-        unmounted(this: ComponentI18nInstance) {
-            this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
-        }
-    });
-
-    app.config.globalProperties.$t = function (this: ComponentI18nInstance | undefined, key: string | string[], options: any) {
-        usingI18n(); // called during render, so we will get re-rendered when translations change
-        if (i18next.isInitialized) {
-            return (this?.__translate ?? genericT)(key, options);
-        } else {
-            return key;
-        }
-    } as TFunction;
+    app.config.globalProperties.$t = withAccessRecording(i18next.t.bind(i18next), usingI18n, i18next);
 
     // this proxy makes things like $i18next.language (basically) reactive
     // we also use it to share some internal state with otherwise unrelated code, like the TranslationComponent
     app.config.globalProperties.$i18next = new Proxy(i18next, {
         get(target, prop) {
             switch (prop) {
-                case "__usingI18n": {
-                    return usingI18n;
+                case "__withAccessRecording": {
+                    return (f: Function) => withAccessRecording(f, usingI18n, i18next);
                 }
                 case "__slotPattern": {
                     return slotNamePattern(slotStart, slotEnd);
@@ -124,55 +63,10 @@ export default function install(app: App, {
             }
         }
     });
-
-
-    /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
-    function getTranslationFunction(lng?: string, ns?: string | readonly string[]): TFunction {
-        if (lng) {
-            return i18next.getFixedT(lng, ns);
-        } else if (ns) {
-            return i18next.getFixedT(null, ns);
-        } else {
-            return genericT;
-        }
-    }
-
-    function includesNs(key: string): boolean {
-        const nsSeparator = i18next.options.nsSeparator;
-        return typeof nsSeparator === "string" && key.includes(nsSeparator);
-    }
-
-    function handleI18nOptions(options: any, loadBundle: (bundle: Messages) => void) {
-        let lng: string | undefined;
-        let ns: string | readonly string[] | undefined;
-        let keyPrefix: string | undefined;
-        if (options.i18nOptions) {
-            let messages: Messages | undefined;
-            let namespaces: string | readonly string[] | false | undefined;
-            ({
-                lng,
-                namespaces = i18next.options.defaultNS,
-                keyPrefix,
-                messages,
-            } = options.i18nOptions);
-
-            // make i18nOptions.messages available to i18next
-            if (messages) {
-                loadBundle(messages);
-            }
-
-            ns = namespaces || undefined;
-            if (ns) {
-                i18next.loadNamespaces(ns); // load configured namespaces
-            }
-        }
-        return { lng, ns, keyPrefix };
-    }
 }
 
-
 interface Extendedi18n extends i18n {
-    __usingI18n: () => void;
+    __withAccessRecording: <T extends Function> (t: T) => T;
     __slotPattern: RegExp;
 }
 interface UseTranslationOptions<TKPrefix = undefined> {
@@ -185,26 +79,26 @@ export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N
     const instance = currentInstance();
     const globalProps = instance.appContext.config.globalProperties;
     const i18next = globalProps.$i18next as Extendedi18n;
-    let t: TFunction<N, TKPrefix>
+    let t: TFunction<N, TKPrefix>;
 
     if (options?.lng) {
-        t = withAccessRecording(i18next.getFixedT(options.lng, ns, options?.keyPrefix), i18next.__usingI18n);
-    } else if (ns) {
-        t = withAccessRecording(i18next.getFixedT(null, ns, options?.keyPrefix), i18next.__usingI18n);
+        t = i18next.getFixedT(options.lng, ns, options?.keyPrefix);
     } else {
-        t = globalProps.$t.bind(instance.proxy);
+        t = i18next.getFixedT(null, ns ?? null, options?.keyPrefix);
     }
     return {
         i18next: i18next as i18n,
-        t
+        t: i18next.__withAccessRecording(t)
     };
 }
 
-function withAccessRecording<T extends Function>(t: T, usingI18n: () => void): T {
+function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, i18next: i18n): T {
     return new Proxy(t, {
         apply: function (target, thisArgument, argumentsList) {
-            console.log("recording access")
-            usingI18n();
+            usingI18n(); // called during render, so we will get re-rendered when translations change
+            if (!i18next.isInitialized) {
+                return argumentsList[0]; // return key
+            }
             return Reflect.apply(target, thisArgument, argumentsList)
         }
     }) as T;
