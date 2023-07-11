@@ -37,25 +37,35 @@ To learn about more options, check out the [full documentation](https://i18next.
 
 ### Simple example
 
-```vue
-<i18n>
-{
-    "en": {
+Given the i18next translations
+```js
+i18next.init({
+  // ...
+  resources: {
+    en: { // language
+      translation: { // the default namespace
         "insurance": "Insurance"
+      }
     },
-    "de": {
+    de: { // language
+      translation: { // the default namespace
         "insurance": "Versicherung"
+      }
     }
-}
-</i18n>
+  }
+})
+```
 
+You can use
+```vue
 <template>
-    <h1>A test in {{ $i18next.language }}</h1>
-    <p>{{ $t('insurance') }}</p>
+  <h1>A test in {{ $i18next.language }}</h1>
+  <p>{{ $t('insurance') }}</p>
 </template>
 ```
 
-Using the composition API you can access the i18next instance and `t()` as well:
+Using the composition API you can access the i18next instance and `t()` as well. 
+But you can also just use $t in the template, without using `useTranslation()`.
 ```vue
 <script setup>
 import { computed } from "vue";
@@ -67,22 +77,32 @@ const term = computed(() => t("insurance"));
 <template>
   <h1>A test in {{ i18next.language }}</h1>
   <p>inline: {{ t("insurance") }}</p>
+  <p>inline with $t: {{ $t("insurance") }}</p>
   <p>computed: {{ term }}</p>
 </template>
 ```
 
 ### Translation component
 
-```vue
-<i18n>
-{
-    "en": {
+Given the i18next translations
+```js
+i18next.init({
+  // ...
+  resources: {
+    en: {
+      translation: {
         "message": "Open the {faq-link} page."
         "faq": "FAQ"
+      }
     },
-}
-</i18n>
+    de: {
+      // ...
+    }
+  }
+})
+```
 
+```vue
 <template>
   <i18next :translation="$t('message')">
     <template #faq-link>
@@ -101,8 +121,25 @@ Custom slot values may be useful when the default braces (`{` and `}`) are wrong
 
 Use custom values for recognizing start and end of the insertion points of the `<i18next>`/`TranslationComponent`
 inside the localization term:
+
+
 ```js
 // main.js
+i18next.init({
+  // ...
+  resources: {
+    en: {
+      translation: {
+        "message": "Open the <slot>faq-link</slot> page."
+        "faq": "FAQ"
+      }
+    },
+    de: {
+      // ...
+    }
+  }
+})
+
 app.use(I18NextVue, {
     i18next,
     slotStart: '<slot>',
@@ -111,15 +148,6 @@ app.use(I18NextVue, {
 ```
 ```vue
 <!-- Component.vue -->
-<i18n>
-{
-    "en": {
-        "message": "Open the <slot>faq-link</slot> page."
-        "faq": "FAQ"
-    },
-}
-</i18n>
-
 <template>
   <i18next :translation="$t('message')">
     <template #faq-link>
