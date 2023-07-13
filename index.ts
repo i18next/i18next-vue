@@ -97,7 +97,7 @@ function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, i1
         apply: function (target, thisArgument, argumentsList) {
             usingI18n(); // called during render, so we will get re-rendered when translations change
             if (!i18next.isInitialized) {
-                return argumentsList[0]; // return key
+                return '';
             }
             return Reflect.apply(target, thisArgument, argumentsList)
         }
