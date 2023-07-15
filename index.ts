@@ -1,4 +1,4 @@
-import { ref, getCurrentInstance, App, defineComponent, VNode, ComponentPublicInstance } from "vue";
+import { ref, getCurrentInstance, App, defineComponent, VNode, ComponentPublicInstance, nextTick } from "vue";
 import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
 type Messages = { [index: string]: string | Messages };
@@ -37,7 +37,9 @@ export default function install(app: App, {
     // the ref (internally) tracks which Vue instances use translations
     // Vue will automatically trigger re-renders when the value of 'lastI18nChange' changes
     const lastI18nChange = ref(new Date());
-    const invalidate: () => void = () => lastI18nChange.value = new Date();
+    const invalidate = () => nextTick(() => { // defer, so namespace loading is actually complete before re-rendering
+        lastI18nChange.value = new Date();
+    });
     const usingI18n: () => void = () => lastI18nChange.value;
     rerenderOn.forEach(event => {
         switch (event) {
@@ -53,10 +55,11 @@ export default function install(app: App, {
 
     app.component('i18next', TranslationComponent);
 
+    const i18nextReady = () => i18next.isInitialized;
     if (!legacyI18nOptionsSupport) {
-        app.config.globalProperties.$t = withAccessRecording(i18next.t.bind(i18next), usingI18n, i18next);
+        app.config.globalProperties.$t = withAccessRecording(i18next.t.bind(i18next), usingI18n, i18nextReady);
     } else {
-        app.config.globalProperties.$t = withAccessRecording(legacyT, usingI18n, i18next) as TFunction;
+        app.config.globalProperties.$t = withAccessRecording(legacyT, usingI18n, i18nextReady) as TFunction;
     }
 
     // this proxy makes things like $i18next.language (basically) reactive
@@ -65,7 +68,7 @@ export default function install(app: App, {
         get(target, prop) {
             switch (prop) {
                 case "__withAccessRecording": {
-                    return (f: Function) => withAccessRecording(f, usingI18n, i18next);
+                    return (f: Function, translationsReady: () => boolean) => withAccessRecording(f, usingI18n, translationsReady);
                 }
                 case "__slotPattern": {
                     return slotNamePattern(slotStart, slotEnd);
@@ -82,6 +85,9 @@ export default function install(app: App, {
         const i18nOptions = this.$options.i18nOptions
         if (!i18nOptions) {
             return i18next.t(keys, options);
+        }
+        if (i18nOptions.namespaces && !ensureTranslationsLoaded(i18next, i18nOptions.namespaces)()) {
+            return ''; // will re-render once translations are available
         }
 
         let keyPrefix = i18nOptions.keyPrefix;
@@ -103,7 +109,7 @@ export default function install(app: App, {
 }
 
 interface Extendedi18n extends i18n {
-    __withAccessRecording: <T extends Function> (t: T) => T;
+    __withAccessRecording: <T extends Function> (t: T, translationsReady: () => boolean) => T;
     __slotPattern: RegExp;
 }
 interface UseTranslationOptions<TKPrefix = undefined> {
@@ -123,15 +129,37 @@ export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N
     }
     return {
         i18next: i18next as i18n,
-        t: i18next.__withAccessRecording(t)
+        t: i18next.__withAccessRecording(t, ensureTranslationsLoaded(i18next, ns))
     };
 }
 
-function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, i18next: i18n): T {
+// produces a function, which will return true if the given translations are available already, else starts loading them and returns false
+function ensureTranslationsLoaded(i18next: i18n, ns: string | readonly string[] = []): () => boolean {
+    let loaded: boolean | undefined;
+    return () => {
+        if (loaded === undefined) {
+            if (!i18next.isInitialized) {
+                return false;
+            } else {
+                const toCheck = typeof ns === 'string' ? [ns] : ns;
+                const missing = toCheck.filter(n => !i18next.hasLoadedNamespace(n));
+                if (!missing.length) {
+                    loaded = true;
+                } else {
+                    loaded = false;
+                    i18next.loadNamespaces(missing).then(() => loaded = true);
+                }
+            }
+        }
+        return loaded;
+    };
+}
+
+function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, translationsReady: () => boolean): T {
     return new Proxy(t, {
         apply: function (target, thisArgument, argumentsList) {
             usingI18n(); // called during render, so we will get re-rendered when translations change
-            if (!i18next.isInitialized) {
+            if (!translationsReady()) {
                 return '';
             }
             return Reflect.apply(target, thisArgument, argumentsList)
