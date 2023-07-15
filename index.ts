@@ -76,9 +76,7 @@ interface UseTranslationOptions<TKPrefix = undefined> {
 
 export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N> = undefined>
     (ns?: N, options?: UseTranslationOptions<TKPrefix>) {
-    const instance = currentInstance();
-    const globalProps = instance.appContext.config.globalProperties;
-    const i18next = globalProps.$i18next as Extendedi18n;
+    const i18next = getGlobalI18Next();
     let t: TFunction<N, TKPrefix>;
 
     if (options?.lng) {
@@ -104,12 +102,16 @@ function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, i1
     }) as T;
 }
 
-function currentInstance() {
+function getGlobalI18Next() {
     const instance = getCurrentInstance();
     if (!instance) {
-        throw new Error("i18next-vue: No Vue instance in context. Make sure to register the i18next-vue plugin using app.use(...).");
+        throw new Error("i18next-vue: No Vue instance in context. This needs to be called inside setup().");
     }
-    return instance;
+    const globalProps = instance.appContext.config.globalProperties;
+    if (!globalProps.$i18next) {
+        throw new Error("i18next-vue: Make sure to register the i18next-vue plugin using app.use(...).");
+    }
+    return globalProps.$i18next as Extendedi18n;
 }
 
 // pattern matches '{ someSlot }'
@@ -126,10 +128,7 @@ export const TranslationComponent = defineComponent({
         }
     },
     setup(props, { slots }) {
-        const instance = currentInstance()
-        const globalProps = instance.appContext.config.globalProperties;
-        const slotPattern = (globalProps.$i18next as Extendedi18n).__slotPattern;
-
+        const slotPattern = getGlobalI18Next().__slotPattern;
         return () => {
             const translation = props.translation;
             const result: (string | VNode)[] = [];
