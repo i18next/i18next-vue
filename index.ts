@@ -1,7 +1,6 @@
 import { ref, getCurrentInstance, App, defineComponent, VNode, ComponentPublicInstance, nextTick } from "vue";
 import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
-type Messages = { [index: string]: string | Messages };
 declare module '@vue/runtime-core' {
     interface ComponentCustomOptions {
         i18nOptions?: {
