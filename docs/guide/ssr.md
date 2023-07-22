@@ -1,5 +1,9 @@
 # SSR
 
+::: warning
+This is mostly theoretical information. If you have feedback about `i18next-vue` in a SSR context, please let us know via a GitHub issue :heart:.
+:::
+
 When using Server Side Rendering (SSR), i18next-vue makes sure to not introduce memory leaks. To do that, two i18next-vue features are not available on the server.
 
 ## No component-specific messages

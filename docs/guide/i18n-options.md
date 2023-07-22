@@ -1,5 +1,11 @@
 # i18nOptions
 
+::: warning Deprecated
+`i18nOptions` is deprecated in `i18next-vue` v3 and **will be removed in v4**.  
+In version 3 you need to enable the [`legacyI18nOptionsSupport` plugin option](/guide/started.html#plugin-options) for the `i18nOptions` to apply.  
+Even with that enabled, v3 no longer supports `messages` in `i18nOptions`.
+:::
+
 You can set some translation options on a per-component basis using the `i18nOptions` option object.
 
 ## `namespaces`
@@ -111,6 +117,9 @@ app.component('app', {
 ```
 
 ## `messages`
+::: danger Removed in v3
+`messages` is no longer supported in `i18next-vue` v3.
+:::
 
 Translations can not only be defined in translation files but also in the `i18nOptions`.
 

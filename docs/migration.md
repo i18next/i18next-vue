@@ -1,6 +1,10 @@
 # Migration from [@panter/vue-i18next](https://panter.github.io/vue-i18next/)
 This package has some breaking changes compared to the @panter version.
 
+::: warning Versions
+These migration notes are for `i18next-vue` v2.x. When updating to 3.x, also consider the [3.x migration information](./migration-v3.md).
+:::
+
 ## Features no longer supported
 - The `v-t` directive has been removed. Please use `$t` instead.
 - The `v-waitForT` directive has been removed. Use `v-if="$i18next.isInitialized"` or hold off mounting Vue until i18next has been initialized:

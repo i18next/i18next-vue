@@ -1,6 +1,6 @@
 # Component-based localization
 
-In general, locale info (e.g. `locale`,`messages`, etc) is set in the `i18next` instance and passed to the i18next-vue Vue plugin during [initialization](./started.md#setup).
+In general, locale info (e.g. `lng`,`resources`, etc) is set in the `i18next` instance and passed to the i18next-vue Vue plugin during [initialization](./started.md#setup).
 
 After that you can translate using `$t` or `this.$t` in Vue components. You can also manage locale info for each component separately, which might be more convenient due to Vue's component oriented design.
 
@@ -60,4 +60,4 @@ Outputs the following:
 </div>
 ```
 
-As in the example above, if the component doesn't have the locale message, it falls back to globally defined localization info. The component uses the language set in i18next.
+The `$t` function ususlly uses the language set in i18next.

@@ -15,4 +15,47 @@ const { t, i18next } = useTranslation();
 
 Make sure to [set up i18next-vue](./started.md#setup) for your app beforehand.
 
-In the `<template>` part just use `$t` and `$i18next`. `useTranslation()` does not change that.
+Even without calling `useTranslation()` you can use `$t` and `$i18next` in your `<template>` part.
+
+## Customize `t`
+::: tip Version info
+Since `i18next-vue` v3.
+:::
+
+`useTranslation()` can be used to get a custom `t` function with a specific namespace, language and/or key prefix:
+
+`useTranslation()` supports passing in a single name space or an array of namespaces to use. These namespaces will be loaded, if they are not available yet.
+
+As a second argument, you can pass an object setting the `keyPrefix` (i.e. a prefix to put before all translation keys passed to this `t`) or a fixed translation language using `lng`.
+
+```vue
+<script setup>
+    const { t } = useTranslation("adminNamespace", { keyPrefix: 'system', lng: 'de' });
+</script>
+```
+
+Both this special `t` and the default `$t` (unaffected by the options) can be used alongside each other in the template.
+
+You can call `useTranslation` multiple times, to e.g. create multiple translation functions for different namespaces.
+
+::: tip 
+If you use certain namespaces/key prefixes a lot, it might make sense to extract composition functions for those to a separate JS module and use these in your components.
+```js
+// t-functions.js
+export function useAdminTranslations() {
+     const { t } = useTranslation("adminNamespace");
+     return t;
+}
+```
+```vue
+<!-- my-component.vue -->
+<script setup>
+    // import { useAdminTranslations } from ...
+    const tAdmin = useAdminTranslations();
+</script>
+<template>
+    <h1 v-if="!isAdmin">{{ $t('not-allowed-warning')}}</h1>
+    <button v-else>{{ tAdmin('shutdown-button-label') }}</button>
+</template>
+```
+:::

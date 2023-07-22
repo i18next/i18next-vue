@@ -26,7 +26,7 @@ pnpm add i18next-vue
 
 - Vue.js `3.x`
     - there is a separate [Vue 2 version](https://github.com/i18next/i18next-vue/tree/vue-2) of this library
-- i18next `19.x` or newer
+- i18next: `23.x` or newer (`19.x` or newer for version 2)
 
 ## Setup
 
@@ -85,8 +85,10 @@ app.use(I18NextVue, {
 });
 ```
 
-| Name | | Description |
+| Option | | Description |
 | --- | --- | --- |
-| **i18next** | Required | The 'i18next' instance to use. |
-| **rerenderOn** | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values include: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
-
+| **`18next`** | Required | The 'i18next' instance to use. |
+| **`rerenderOn`** | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values include: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
+| **`slotStart`**<br>since v2.2.0 | Optional<hr>Default: `{` | Beginning of a slot in the translation component. |
+| **`slotEnd`**<br>since v2.2.0 | Optional<hr>Default: `}` | End of a slot in the translation component. |
+| **`legacyI18nOptionsSupport`**<br>since v3 | Optional<hr>Default: `false` | Enables `i18nOptions` support in v3.<br>This support will be removed in v4.<br>v2 supports `i18nOptions` by default. |

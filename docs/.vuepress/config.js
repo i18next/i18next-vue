@@ -26,7 +26,7 @@ module.exports = ctx => ({
             link: '/guide/started.md',
           },
           {
-            text: 'v2.x (Vue 3)',
+            text: 'v2.x/3.x (Vue 3)',
             ariaLabel: 'Version Menu',
             items: [
               { text: 'v1.x (Vue 2)', link: 'https://i18next.github.io/i18next-vue/vue-2/introduction' }
@@ -46,12 +46,12 @@ module.exports = ctx => ({
             children: [
               '/guide/started.md',
               '/guide/component.md',
-              '/guide/component-interpolation.md',
-              '/guide/i18n-options.md',
-              '/guide/i18n.md',
               '/guide/composition-api.md',
-              '/guide/single-file-component.md',
+              '/guide/component-interpolation.md',
+              '/guide/i18n.md',
               '/guide/ssr.md',
+              '/guide/i18n-options.md',
+              '/guide/single-file-component.md',
             ]
           },
           {
@@ -59,6 +59,7 @@ module.exports = ctx => ({
             collapsable: false,
             children: [
               '/migration.md',
+              '/migration-v3.md',
             ]
           }
         ]

@@ -93,3 +93,13 @@ This will render
   <strong>Greetings</strong> 42 people being amazing
 </label>
 ```
+
+## Custom start/end markers
+
+::: tip Version info
+Since `i18next-vue` v2.2.0.
+:::
+
+Custom slot values may be useful when the default braces (`{` and `}`) are wrongly treated by the Locize service or don't satisfy other needs.
+
+See [the README](https://github.com/i18next/i18next-vue/tree/main#custom-slot-values) for details.

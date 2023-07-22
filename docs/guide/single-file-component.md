@@ -1,4 +1,8 @@
 # Single file components: `<i18n>`
+::: danger Removed in v3
+`<i18n>` blocks are no longer supported in `i18next-vue` v3. This is probably already not working in v2, because there are no Vue 3 loaders producing the right format.
+:::
+
 
 by [@kazupon](https://github.com/kazupon)
 
