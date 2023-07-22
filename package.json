@@ -1,8 +1,8 @@
 {
   "name": "i18next-vue",
   "description": "i18next-vue docs",
-  "version": "2.0.0-beta.0",
-  "author": "dot.base <movebase@charite.de> (https://movebase.de)",
+  "version": "3.0.0-continuous",
+  "author": "Konrad Kügler <swamblumat-git@yahoo.de>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -24,10 +24,10 @@
     "publish-main": "gh-pages -d docs/.vuepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets"
   },
   "devDependencies": {
-    "@vuepress/theme-vue": "^1.9.7",
-    "gh-pages": "^4.0.0",
-    "vue": "^2.6.14",
-    "vuepress": "^1.9.7"
+    "@vuepress/theme-vue": "^1.9.9",
+    "gh-pages": "^5.0.0",
+    "vue": "^2.7.14",
+    "vuepress": "^1.9.9"
   },
   "files": []
 }
