@@ -22,7 +22,8 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
-    "publish-main": "gh-pages -d docs/.vitepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets"
+    "publish-main": "gh-pages -d docs/.vitepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
     "gh-pages": "^5.0.0",
