@@ -1,19 +1,18 @@
-# i18nOptions
+# i18nOptions <Badge type="warning" text="Deprecated since 3.0" /><Badge type="danger" text="For removal in 4.0" />
 
 ::: warning Deprecated
-`i18nOptions` is deprecated in `i18next-vue` v3 and **will be removed in v4**.  
-In version 3 you need to enable the [`legacyI18nOptionsSupport` plugin option](/guide/started.html#plugin-options) for the `i18nOptions` to apply.  
-Even with that enabled, v3 no longer supports `messages` in `i18nOptions`.
+`i18nOptions` are now deprecated and **will be removed in v4**. They can be replaced with `useTranslation()` using its [new parameters in v3](/guide/composition-api#customize-t) for most use-cases.
+
+In version 3 you need to enable the [`legacyI18nOptionsSupport` plugin option](/guide/started.html#plugin-options) for the `i18nOptions` to apply. Even with that enabled, v3 no longer supports [`messages`](#messages) in `i18nOptions`.
 :::
 
 You can set some translation options on a per-component basis using the `i18nOptions` option object.
 
-## `namespaces`
+## `namespaces` <Badge type="warning" text="Deprecated since 3.0" />
 
-FIXME: upgrade note: They *are* loaded now.
-The namepace will not be loaded automatically, see [loadComponentNamespace](/guide/started.html#init)
+The namespace(s) to lookup translations in. These will be loaded automatically.
 
-FIXME: example still uses `<i18next>`
+FIXME: example still uses v2's `<i18next>`
 
 ```javascript
 const locales = {
@@ -76,7 +75,7 @@ app.component("app", {
 });
 ```
 
-## `keyPrefix`
+## `keyPrefix` <Badge type="warning" text="Deprecated since 3.0" />
 
 You can prefix all keys used for translations in a component. This way you can use shorter keys in `$t()`.
 
@@ -116,8 +115,8 @@ app.component('app', {
 });
 ```
 
-## `messages`
-::: danger Removed in v3
+## `messages` <Badge type="danger" text="Removed in 3.0" />
+::: danger NOTE
 `messages` is no longer supported in `i18next-vue` v3.
 :::
 
@@ -146,7 +145,7 @@ app.component('app', {
 
 Another way of doing this is [using an `<i18n>` block](./single-file-component.md).
 
-## `lng`
+## `lng` <Badge type="warning" text="Deprecated since 3.0" />
 
 Set a fixed language for a component.
 

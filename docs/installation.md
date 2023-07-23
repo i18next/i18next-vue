@@ -3,26 +3,17 @@
 ## Using a package manager
 If you use a bundler like Webpack, Vite, etc. you can install i18next-vue like this:
 
-<code-group>
-<code-block title="npm">
-```bash
+::: code-group
+```bash[npm]
 npm install i18next-vue
 ``` 
-</code-block>
-
-<code-block title="yarn">
-```bash
+```bash[yarn]
 yarn add i18next-vue
 ```
-</code-block>
-
-<code-block title="pnpm">
-```bash
+```bash[pnpm]
 pnpm add i18next-vue
 ```
-</code-block>
-</code-group>
-    
+:::
 
 You need to explicitly install the `i18next-vue` plugin via `app.use()`:
     

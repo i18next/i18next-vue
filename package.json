@@ -19,15 +19,14 @@
     "typescript"
   ],
   "scripts": {
-    "dev": "vuepress dev docs --temp docs/.temp",
-    "build": "vuepress build docs --temp docs/.temp",
-    "publish-main": "gh-pages -d docs/.vuepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets"
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "publish-main": "gh-pages -d docs/.vitepress/dist -r https://github.com/i18next/i18next-vue.git --remove assets"
   },
   "devDependencies": {
-    "@vuepress/theme-vue": "^1.9.9",
     "gh-pages": "^5.0.0",
-    "vue": "^2.7.14",
-    "vuepress": "^1.9.9"
+    "vitepress": "^1.0.0-beta.6"
   },
   "files": []
 }

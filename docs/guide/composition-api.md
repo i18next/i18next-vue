@@ -17,20 +17,26 @@ Make sure to [set up i18next-vue](./started.md#setup) for your app beforehand.
 
 Even without calling `useTranslation()` you can use `$t` and `$i18next` in your `<template>` part.
 
-## Customize `t`
-::: tip Version info
-Since `i18next-vue` v3.
-:::
+## Customize `t` <Badge type="tip" text="Since 3.0" />
 
 `useTranslation()` can be used to get a custom `t` function with a specific namespace, language and/or key prefix:
 
 `useTranslation()` supports passing in a single name space or an array of namespaces to use. These namespaces will be loaded, if they are not available yet.
 
-As a second argument, you can pass an object setting the `keyPrefix` (i.e. a prefix to put before all translation keys passed to this `t`) or a fixed translation language using `lng`.
+```vue
+<script setup>
+    const { t } = useTranslation("adminNamespace");
+</script>
+```
+
+As a second argument, you can pass an object setting the `keyPrefix` (i.e. a prefix to put before all translation keys passed to this `t`) and/or a fixed translation language using `lng`.
 
 ```vue
 <script setup>
-    const { t } = useTranslation("adminNamespace", { keyPrefix: 'system', lng: 'de' });
+    const { t } = useTranslation("adminNamespace", {
+        keyPrefix: 'system',
+        lng: 'de'
+    });
 </script>
 ```
 

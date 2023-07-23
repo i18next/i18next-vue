@@ -94,11 +94,7 @@ This will render
 </label>
 ```
 
-## Custom start/end markers
-
-::: tip Version info
-Since `i18next-vue` v2.2.0.
-:::
+## Custom start/end markers <Badge type="tip" text="Since 2.2.0" />
 
 Custom slot values may be useful when the default braces (`{` and `}`) are wrongly treated by the Locize service or don't satisfy other needs.
 
