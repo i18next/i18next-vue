@@ -1,8 +1,8 @@
 {
   "name": "i18next-vue",
   "description": "i18next integration for Vue",
-  "version": "1.1.0",
-  "author": "dot.base <movebase@charite.de> (https://movebase.de)",
+  "version": "1.99.0-vue27",
+  "author": "Konrad Kügler <swamblumat-git@yahoo.de>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,16 +21,18 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "dry-publish": "npm publish --tag vue-2 --dry-run"
+    "dry-publish": "npm publish --tag vue-27-next --dry-run"
   },
-  "main": "./dist/index.js",
+  "type": "module",
+  "module": "./dist/index.js",
+  "exports": "./dist/index.js",
   "types": "./types/index.d.ts",
   "peerDependencies": {
-    "i18next": ">=19",
-    "vue": "^2.6.0"
+    "i18next": ">=23",
+    "vue": "^2.7.14"
   },
   "devDependencies": {
-    "typescript": "^4.1.3"
+    "typescript": "^4.9.5"
   },
   "files": [
     "dist/**/*",

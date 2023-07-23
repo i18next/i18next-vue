@@ -4,12 +4,14 @@
 
 This library is a simple wrapper for [i18next](https://www.i18next.com), simplifying its use in Vue 2.
 
+This special version is a backport of the [v3 changes](https://i18next.github.io/i18next-vue/migration-v3.html). It also requires Vue 2.7 and fixes the types for it.
+
 There is also a [Vue 3 version of this package](https://github.com/i18next/i18next-vue).
 
 ## Installation
 
 ```bash
-npm install i18next-vue@vue-2
+npm install i18next-vue@vue-27-next
 ```
 
 ## Initialisation
@@ -38,18 +40,26 @@ Use the `$t` function, which works analogously to the `t` function found in [i18
 To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/vue-2/).
 ### Simple example
 
-```vue
-<i18n>
-{
-    "en": {
+Given the i18next translations
+```js
+i18next.init({
+  // ...
+  resources: {
+    en: { // language
+      translation: { // the default namespace
         "insurance": "Insurance"
+      }
     },
-    "de": {
+    de: { // language
+      translation: { // the default namespace
         "insurance": "Versicherung"
+      }
     }
-}
-</i18n>
+  }
+})
+```
 
+```vue
 <template>
     <h1>A test in {{ $i18next.language }}</h1>
     <p>{{ $t('insurance') }}</p>

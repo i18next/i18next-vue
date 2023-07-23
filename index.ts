@@ -1,6 +1,6 @@
-import _Vue, { FunctionalComponentOptions, VNode } from "vue";
+import _Vue, { FunctionalComponentOptions, VNode, getCurrentInstance } from "vue";
 import type { RecordPropsDefinition } from "vue/types/options";
-import { i18n, TFunction, TOptions } from "i18next";
+import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
 declare module "vue/types/vue" {
     interface Vue {
@@ -8,39 +8,45 @@ declare module "vue/types/vue" {
         $i18next: i18n;
     }
 }
-type SimpleTFunction = (key: string, options?: TOptions | string) => string;
-type ComponentI18nInstance = Vue & {
-    __bundles?: Array<[string, string]>;  // the bundles loaded by the component
-    __translate?: SimpleTFunction; // local to each component with an <i18n> block or i18nOptions
-};
-type Messages = { [index: string]: string | Messages };
+declare module 'vue' {
+    interface ComponentCustomProperties {
+        $t: TFunction;
+        $i18next: i18n;
+    }
+}
 declare module "vue/types/options" {
     interface ComponentOptions<V extends _Vue, Data, Methods, Computed, PropsDef, Props> {
-        __i18n?: string[]; // due to package @intlify/vue-i18n-loader, each component with at least one <i18n> block has __i18n set
         i18nOptions?: {
             lng?: string;
             keyPrefix?: string;
             namespaces?: string | string[];
-            messages?: Messages;
         }
     }
 }
 
 interface VueI18NextOptions {
     i18next: i18n;
-    rerenderOn?: ('initialized' | 'languageChanged' | 'loaded' | 'added' | 'removed')[];
+    rerenderOn?: ('languageChanged' | 'loaded' | 'added' | 'removed')[];
+    // Optional custom pattern for matching slot start of the `TranslationComponent`.
+    slotStart?: string,
+    // Optional custom pattern for matching slot end of the `TranslationComponent`.
+    slotEnd?: string,
+    // enable support for the `i18nOptions` option. Will be removed in v4.
+    legacyI18nOptionsSupport?: boolean
 }
 
 export default function install(Vue: typeof _Vue, {
     i18next,
     rerenderOn = ['languageChanged', 'loaded', 'added', 'removed'],
+    slotStart = '{',
+    slotEnd = '}',
+    legacyI18nOptionsSupport = false,
 }: VueI18NextOptions): void {
-    const genericT = i18next.t.bind(i18next);
     // the observable (internally) tracks which Vue instances use translations and will automatically 
     // trigger re-renders by Vue when the value of 'lastI18nChange' changes
-    const changeTracker = Vue.observable({ lastI18nChange: new Date() });
-    const invalidate: () => void = () => changeTracker.lastI18nChange = new Date();
-    const usingTranslation: () => void = () => changeTracker.lastI18nChange;
+    const lastI18nChange = Vue.observable({ value: new Date() });
+    const invalidate: () => void = () => Vue.nextTick(() => lastI18nChange.value = new Date());
+    const usingI18n: () => void = () => lastI18nChange.value;
     rerenderOn.forEach(event => {
         switch (event) {
             case 'added':
@@ -53,146 +59,169 @@ export default function install(Vue: typeof _Vue, {
         }
     })
 
-    Vue.mixin({
-        beforeCreate(this: ComponentI18nInstance) {
-            const options = this.$options;
-            if (!options.__i18n && !options.i18nOptions) {
-                this.__translate = undefined;  // required to enable proxied access to `__translate` in the $t function
-                return;
-            }
+    Vue.component('i18next', TranslationComponent);
 
-            // each component gets its own 8-digit random namespace prefixed with its name if available
-            const name = this.$options.name;
-            const rand = ((Math.random() * 10 ** 8) | 0).toString();
-            const localNs = [name, rand].filter(x => !!x).join("-");
+    const i18nextReady = () => i18next.isInitialized;
+    if (!legacyI18nOptionsSupport) {
+        Vue.prototype.$t = withAccessRecording(i18next.t.bind(i18next), usingI18n, i18nextReady);
+    } else {
+        Vue.prototype.$t = withAccessRecording(legacyT, usingI18n, i18nextReady) as TFunction;
+    }
 
-            // used to store added resource bundle identifiers for later removal upen component destruction
-            this.__bundles = [];
-            const loadBundle = (bundle: Messages) => {
-                Object.entries(bundle).forEach(([lng, resources]) => {
-                    i18next.addResourceBundle(lng, localNs, resources, true, false);
-                    this.__bundles!.push([lng, localNs]);
-                });
-            }
-
-            // iterate all <i18n> blocks' contents as provided by @intlify/vue-i18n-loader and make them available to i18next
-            options.__i18n?.forEach(bundle => {
-                loadBundle(JSON.parse(bundle));
-            });
-
-            let { lng, ns, keyPrefix } = handleI18nOptions(options, loadBundle);
-            if (this.__bundles?.length) { // has local translations
-                ns = [localNs].concat(ns ?? []); // add component-local namespace, thus finding and preferring local translations
-            }
-
-            const t = getTranslationFunction(lng, ns);
-            this.__translate = (key, options) => {
-                if (!keyPrefix || includesNs(key)) {
-                    return t(key, options);
-                } else { // adding keyPrefix only if key is not namespaced
-                    return t(keyPrefix + '.' + key, options);
+    // this proxy makes things like $i18next.language (basically) reactive
+    // we also use it to share some internal state with otherwise unrelated code, like the TranslationComponent
+    Vue.prototype.$i18next = new Proxy(i18next, {
+        get(target, prop) {
+            switch (prop) {
+                case "__withAccessRecording": {
+                    return (f: Function, translationsReady: () => boolean) => withAccessRecording(f, usingI18n, translationsReady);
                 }
-            };
-        },
-        destroyed(this: ComponentI18nInstance) {
-            this.__bundles?.forEach(([lng, ns]) => i18next.removeResourceBundle(lng, ns)); // avoid memory leaks
+                case "__slotPattern": {
+                    return slotNamePattern(slotStart, slotEnd);
+                }
+                default: {
+                    usingI18n();
+                    return Reflect.get(target, prop);
+                }
+            }
         }
     });
 
-    Vue.prototype.$t = function (this: ComponentI18nInstance | undefined, key, options) {
-        usingTranslation(); // called during render, so we will get re-rendered when translations change
-        if (i18next.isInitialized) {
-            return (this?.__translate ?? genericT)(key, options);
-        } else {
-            return key;
+    function legacyT(this: Vue, keys: string | string[], options?: Record<string, any>) {
+        const i18nOptions = this.$options.i18nOptions
+        if (!i18nOptions) {
+            return i18next.t(keys, options);
         }
-    } as SimpleTFunction;
-    Vue.prototype.$i18next = typeof Proxy === 'function' ?
-        new Proxy(i18next, {
-            get(target, prop) {
-                usingTranslation();
-                return Reflect.get(target, prop);
-            }
-        }) : i18next;
+        if (i18nOptions.namespaces && !ensureTranslationsLoaded(i18next, i18nOptions.namespaces)()) {
+            return ''; // will re-render once translations are available
+        }
 
-    /** Translation function respecting lng and ns. The namespace can be overriden in $t calls using a key prefix or the 'ns' option. */
-    function getTranslationFunction(lng?: string, ns?: string[]): TFunction {
-        if (lng) {
-            return i18next.getFixedT(lng, ns);
-        } else if (ns) {
-            return i18next.getFixedT(null, ns);
-        } else {
-            return genericT;
+        let keyPrefix = i18nOptions.keyPrefix;
+        if (typeof keys === 'string' && includesNs(keys, i18next)) {
+            keyPrefix = undefined;
         }
+        let t: TFunction;
+        if (i18nOptions.lng) {
+            t = i18next.getFixedT(i18nOptions.lng, i18nOptions.namespaces, keyPrefix);
+        } else {
+            t = i18next.getFixedT(null, i18nOptions.namespaces ?? null, keyPrefix);
+        }
+        return t(keys, options);
     }
-
-    function includesNs(key: string): boolean {
+    function includesNs(key: string, i18next: i18n): boolean {
         const nsSeparator = i18next.options.nsSeparator;
         return typeof nsSeparator === "string" && key.includes(nsSeparator);
     }
-
-    function handleI18nOptions(options: any, loadBundle: (bundle: Messages) => void) {
-        let lng: string | undefined;
-        let ns: string[] | undefined;
-        let keyPrefix: string | undefined;
-        if (options.i18nOptions) {
-            let messages: Messages | undefined;
-            let namespaces: string | string[] | undefined;
-            ({
-                lng,
-                namespaces = i18next.options.defaultNS,
-                keyPrefix,
-                messages,
-            } = options.i18nOptions);
-
-            // make i18nOptions.messages available to i18next
-            if (messages) {
-                loadBundle(messages);
-            }
-
-            ns = typeof namespaces === 'string' ? [namespaces] : namespaces;
-            if (ns) {
-                i18next.loadNamespaces(ns); // load configured namespaces
-            }
-        }
-        return { lng, ns, keyPrefix };
-    }
-
-    // pattern matches '{ someSlot }'
-    const slotNamePattern = new RegExp('{\\s*([a-z0-9\\-]+)\\s*}', 'gi');
-    const TranslationComponent:
-        FunctionalComponentOptions<
-            { translation: string },
-            RecordPropsDefinition<{ translation: string; }>
-        > = {
-        functional: true,
-        props: {
-            translation: {
-                type: String,
-                required: true,
-            }
-        },
-        render(_createElement, context) {
-            const textNode: (t: string) => VNode = (context as any)._v; // createTextVNode internal API
-            const translation = context.props.translation;
-            const result: VNode[] = [];
-
-            let match;
-            let lastIndex = 0;
-            while ((match = slotNamePattern.exec(translation)) !== null) {
-                result.push(textNode(translation.substring(lastIndex, match.index)))
-                const slot = context.scopedSlots[match[1]];
-                if (slot) {
-                    const nodes = slot({})
-                    nodes?.forEach(n => result.push(n))
-                } else {
-                    result.push(textNode(match[0]));
-                }
-                lastIndex = slotNamePattern.lastIndex;
-            }
-            result.push(textNode(translation.substring(lastIndex)))
-            return result;
-        }
-    };
-    Vue.component('i18next', TranslationComponent);
 }
+
+interface Extendedi18n extends i18n {
+    __withAccessRecording: <T extends Function> (t: T, translationsReady: () => boolean) => T;
+    __slotPattern: RegExp;
+}
+interface UseTranslationOptions<TKPrefix = undefined> {
+    keyPrefix?: TKPrefix;
+    lng?: string | readonly string[]
+}
+
+export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N> = undefined>
+    (ns?: N, options?: UseTranslationOptions<TKPrefix>) {
+    const i18next = getGlobalI18Next();
+    let t: TFunction<N, TKPrefix>;
+
+    if (options?.lng) {
+        t = i18next.getFixedT(options.lng, ns, options?.keyPrefix);
+    } else {
+        t = i18next.getFixedT(null, ns ?? null, options?.keyPrefix);
+    }
+    return {
+        i18next: i18next as i18n,
+        t: i18next.__withAccessRecording(t, ensureTranslationsLoaded(i18next, ns))
+    };
+}
+
+// produces a function, which will return true if the given translations are available already, else starts loading them and returns false
+function ensureTranslationsLoaded(i18next: i18n, ns: string | readonly string[] = []): () => boolean {
+    let loaded: boolean | undefined;
+    return () => {
+        if (loaded === undefined) {
+            if (!i18next.isInitialized) {
+                return false;
+            } else {
+                const toCheck = typeof ns === 'string' ? [ns] : ns;
+                const missing = toCheck.filter(n => !i18next.hasLoadedNamespace(n));
+                if (!missing.length) {
+                    loaded = true;
+                } else {
+                    loaded = false;
+                    i18next.loadNamespaces(missing).then(() => loaded = true);
+                }
+            }
+        }
+        return loaded;
+    };
+}
+
+function withAccessRecording<T extends Function>(t: T, usingI18n: () => void, translationsReady: () => boolean): T {
+    return new Proxy(t, {
+        apply: function (target, thisArgument, argumentsList) {
+            usingI18n(); // called during render, so we will get re-rendered when translations change
+            if (!translationsReady()) {
+                return '';
+            }
+            return Reflect.apply(target, thisArgument, argumentsList)
+        }
+    }) as T;
+}
+
+function getGlobalI18Next() {
+    const instance = getCurrentInstance();
+    if (!instance) {
+        throw new Error("i18next-vue: No Vue instance in context. This needs to be called inside setup().");
+    }
+    const globalProps = _Vue.prototype;
+    if (!globalProps.$i18next) {
+        throw new Error("i18next-vue: Make sure to register the i18next-vue plugin using Vue.use(...).");
+    }
+    return globalProps.$i18next as Extendedi18n;
+}
+
+// pattern matches '{ someSlot }'
+function slotNamePattern(start: string, end: string) {
+    const pattern = `${start}\\s*([a-z0-9\\-]+)\\s*${end}`;
+    return new RegExp(pattern, 'gi');
+}
+const TranslationComponent:
+    FunctionalComponentOptions<
+        { translation: string },
+        RecordPropsDefinition<{ translation: string; }>
+    > = {
+    functional: true,
+    props: {
+        translation: {
+            type: String,
+            required: true,
+        }
+    },
+    render(_createElement, context) {
+        const slotPattern = getGlobalI18Next().__slotPattern;
+        const textNode: (t: string) => VNode = (context as any)._v; // createTextVNode internal API
+        const translation = context.props.translation;
+        const result: VNode[] = [];
+
+        let match;
+        let lastIndex = 0;
+        while ((match = slotPattern.exec(translation)) !== null) {
+            result.push(textNode(translation.substring(lastIndex, match.index)))
+            const slot = context.scopedSlots[match[1]];
+            if (slot) {
+                const nodes = slot({})
+                nodes?.forEach(n => result.push(n))
+            } else {
+                result.push(textNode(match[0]));
+            }
+            lastIndex = slotPattern.lastIndex;
+        }
+        result.push(textNode(translation.substring(lastIndex)))
+        return result;
+    }
+};
