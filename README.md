@@ -6,6 +6,9 @@ This library is a simple wrapper for [i18next](https://www.i18next.com), simplif
 
 There is also a [Vue 2 version of this package](https://github.com/i18next/i18next-vue/tree/vue-2).
 
+## Upgrade
+In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html) or [from `i18next-vue` v2.x](https://i18next.github.io/i18next-vue/migration-v3.html).
+
 ## Installation
 
 ```bash
