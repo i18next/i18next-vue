@@ -20,3 +20,6 @@ jobs:
 
       - name: Execute build
         run: npm run build
+
+      - name: Execute tests
+        run: npm run test-ci

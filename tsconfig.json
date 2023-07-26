@@ -8,7 +8,8 @@
     "removeComments": true,
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "Node16"
+    "moduleResolution": "Node16",
+    "types": ["vitest/globals"]
   },
   "include": [
     "index.ts"
