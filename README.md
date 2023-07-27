@@ -7,7 +7,7 @@ This library is a simple wrapper for [i18next](https://www.i18next.com), simplif
 There is also a [Vue 2 version of this package](https://github.com/i18next/i18next-vue/tree/vue-2).
 
 ## Upgrade
-In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html) or [from `i18next-vue` v2.x](https://i18next.github.io/i18next-vue/migration-v3.html).
+In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html) or [from `i18next-vue` 2.x or 1.x](https://i18next.github.io/i18next-vue/migration-v3.html).
 
 ## Installation
 
@@ -32,11 +32,11 @@ createApp(App).use(I18NextVue, { i18next }).mount('#app');
 
 ## Usage
 
-Use the `$t` translation function, which works analogously to the `t` function found in [i18next](https://www.i18next.com/overview/api#t).
+Use the `$t` translation function, which works like (and uses) the versatile `t` function from [i18next](https://www.i18next.com/overview/api#t).
 
 There is [a full tutorial](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up i18next-vue. You can check out the [live demo version](https://codesandbox.io/p/sandbox/i18next-vue-v3-y3p49l?file=%2Fsrc%2Fcomponents%2FTranslationShowCase.vue%3A2%2C22) version of it, too.
 
-To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/). This also outlines the migration path from @panter/vue-i18next.
+To learn about more options, check out the [full documentation](https://i18next.github.io/i18next-vue/).
 
 ### Simple example
 
@@ -67,8 +67,10 @@ You can use
 </template>
 ```
 
-Using the composition API you can access the i18next instance and `t()` as well. 
-But you can also just use $t in the template, without using `useTranslation()`.
+`$t()` works both in Options API and Composition API components.
+
+Using the [`useTranslation()` composition function](https://i18next.github.io/i18next-vue/guide/composition-api.html)  you can access the i18next instance and `t()` in the `setup` part, and e.g. get a `t()` functions for a specific namespace. 
+
 ```vue
 <script setup>
 import { computed } from "vue";
@@ -87,7 +89,10 @@ const term = computed(() => t("insurance"));
 
 ### Translation component
 
-Given the i18next translations
+i18next-vue provides a [`<i18next>` translation component](https://i18next.github.io/i18next-vue/guide/component-interpolation.html), so you can use markup (including Vue components) in translations.
+
+In this example `{faq-link}` will be replaced by the `faq-link` slot, i.e. by the router link. You can move `{faq-link}` around in the translation, so it makes sense for the target language.
+
 ```js
 i18next.init({
   // ...
@@ -95,10 +100,10 @@ i18next.init({
     en: {
       translation: {
         "message": "Open the {faq-link} page."
-        "faq": "FAQ"
+        "faq": "Frequently Asked Questions"
       }
     },
-    de: {
+    fr: {
       // ...
     }
   }
