@@ -1,49 +1,51 @@
 {
-    "name": "i18next-vue",
-    "description": "i18next integration for Vue",
-    "version": "3.0.0-rc.1",
-    "author": "Konrad Kügler <swamblumat-git@yahoo.de>",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/i18next/i18next-vue.git"
-    },
-    "homepage": "https://github.com/i18next/i18next-vue",
-    "bugs": {
-        "url": "https://github.com/i18next/i18next-vue/issues"
-    },
-    "keywords": [
-        "i18n",
-        "i18next",
-        "vue",
-        "typescript"
-    ],
-    "scripts": {
-        "dev": "npm run build -- --watch index.ts",
-        "build": "tsup index.ts --format esm --dts",
-        "test": "vitest",
-        "test-ci": "vitest run",
-        "coverage": "vitest run --coverage"
-    },
-    "type": "module",
-    "module": "./dist/index.js",
-    "exports": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "peerDependencies": {
-        "i18next": ">=23",
-        "vue": "^3.3.4"
-    },
-    "devDependencies": {
-        "@babel/types": "^7.22.5",
-        "@vitest/coverage-v8": "^0.33.0",
-        "@vue/test-utils": "^2.4.1",
-        "jsdom": "^22.1.0",
-        "tsup": "^7.1.0",
-        "typescript": "^4.9.5",
-        "vitest": "^0.33.0"
-    },
-    "files": [
-        "dist/**/*",
-        "types/**/*"
-    ]
+	"name": "i18next-vue",
+	"description": "i18next integration for Vue",
+	"version": "3.0.0-rc.1",
+	"author": "Konrad Kügler <swamblumat-git@yahoo.de>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/i18next/i18next-vue.git"
+	},
+	"homepage": "https://github.com/i18next/i18next-vue",
+	"bugs": {
+		"url": "https://github.com/i18next/i18next-vue/issues"
+	},
+	"keywords": [
+		"i18n",
+		"i18next",
+		"vue",
+		"typescript"
+	],
+	"scripts": {
+		"dev": "npm run build -- --watch index.ts",
+		"build": "tsup index.ts --format esm --dts",
+		"test": "vitest",
+		"test-ci": "vitest run",
+		"coverage": "vitest run --coverage",
+		"format": "prettier . --write"
+	},
+	"type": "module",
+	"module": "./dist/index.js",
+	"exports": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"peerDependencies": {
+		"i18next": ">=23",
+		"vue": "^3.3.4"
+	},
+	"devDependencies": {
+		"@babel/types": "^7.22.5",
+		"@vitest/coverage-v8": "^0.33.0",
+		"@vue/test-utils": "^2.4.1",
+		"jsdom": "^22.1.0",
+		"prettier": "3.0.0",
+		"tsup": "^7.1.0",
+		"typescript": "^4.9.5",
+		"vitest": "^0.33.0"
+	},
+	"files": [
+		"dist/**/*",
+		"types/**/*"
+	]
 }

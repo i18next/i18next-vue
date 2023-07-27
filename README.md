@@ -7,6 +7,7 @@ This library is a simple wrapper for [i18next](https://www.i18next.com), simplif
 There is also a [Vue 2 version of this package](https://github.com/i18next/i18next-vue/tree/vue-2).
 
 ## Upgrade
+
 In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html) or [from `i18next-vue` 2.x or 1.x](https://i18next.github.io/i18next-vue/migration-v3.html).
 
 ## Installation
@@ -41,35 +42,41 @@ To learn about more options, check out the [full documentation](https://i18next.
 ### Simple example
 
 Given the i18next translations
+
 ```js
 i18next.init({
-  // ...
-  resources: {
-    en: { // language
-      translation: { // the default namespace
-        "insurance": "Insurance"
-      }
-    },
-    de: { // language
-      translation: { // the default namespace
-        "insurance": "Versicherung"
-      }
-    }
-  }
-})
+	// ...
+	resources: {
+		en: {
+			// language
+			translation: {
+				// the default namespace
+				insurance: "Insurance",
+			},
+		},
+		de: {
+			// language
+			translation: {
+				// the default namespace
+				insurance: "Versicherung",
+			},
+		},
+	},
+});
 ```
 
 You can use
+
 ```vue
 <template>
-  <h1>A test in {{ $i18next.language }}</h1>
-  <p>{{ $t('insurance') }}</p>
+	<h1>A test in {{ $i18next.language }}</h1>
+	<p>{{ $t("insurance") }}</p>
 </template>
 ```
 
 `$t()` works both in Options API and Composition API components.
 
-Using the [`useTranslation()` composition function](https://i18next.github.io/i18next-vue/guide/composition-api.html)  you can access the i18next instance and `t()` in the `setup` part, and e.g. get a `t()` functions for a specific namespace. 
+Using the [`useTranslation()` composition function](https://i18next.github.io/i18next-vue/guide/composition-api.html) you can access the i18next instance and `t()` in the `setup` part, and e.g. get a `t()` functions for a specific namespace.
 
 ```vue
 <script setup>
@@ -80,10 +87,10 @@ const term = computed(() => t("insurance"));
 </script>
 
 <template>
-  <h1>A test in {{ i18next.language }}</h1>
-  <p>inline: {{ t("insurance") }}</p>
-  <p>inline with $t: {{ $t("insurance") }}</p>
-  <p>computed: {{ term }}</p>
+	<h1>A test in {{ i18next.language }}</h1>
+	<p>inline: {{ t("insurance") }}</p>
+	<p>inline with $t: {{ $t("insurance") }}</p>
+	<p>computed: {{ term }}</p>
 </template>
 ```
 
@@ -112,13 +119,13 @@ i18next.init({
 
 ```vue
 <template>
-  <i18next :translation="$t('message')">
-    <template #faq-link>
-      <router-link :to="FAQ_ROUTE">
-        {{ $t('faq') }}
-      </router-link>
-    </template>
-  </i18next>
+	<i18next :translation="$t('message')">
+		<template #faq-link>
+			<router-link :to="FAQ_ROUTE">
+				{{ $t("faq") }}
+			</router-link>
+		</template>
+	</i18next>
 </template>
 ```
 
@@ -129,7 +136,6 @@ Custom slot values may be useful when the default braces (`{` and `}`) are wrong
 
 Use custom values for recognizing start and end of the insertion points of the `<i18next>`/`TranslationComponent`
 inside the localization term:
-
 
 ```js
 // main.js
@@ -154,20 +160,22 @@ app.use(I18NextVue, {
     slotEnd: '</slot>',
 });
 ```
+
 ```vue
 <!-- Component.vue -->
 <template>
-  <i18next :translation="$t('message')">
-    <template #faq-link>
-      <router-link :to="FAQ_ROUTE">
-        {{ $t('faq') }}
-      </router-link>
-    </template>
-  </i18next>
+	<i18next :translation="$t('message')">
+		<template #faq-link>
+			<router-link :to="FAQ_ROUTE">
+				{{ $t("faq") }}
+			</router-link>
+		</template>
+	</i18next>
 </template>
 ```
 
 ## Contributing
 
 ### Requirements
+
 - node.js >= v18

@@ -1,17 +1,15 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "types",
-    "module": "Node16",
-    "outDir": "dist",
-    "target": "ES2017",
-    "removeComments": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution": "Node16",
-    "types": ["vitest/globals"]
-  },
-  "include": [
-    "index.ts"
-  ]
+	"compilerOptions": {
+		"declaration": true,
+		"declarationDir": "types",
+		"module": "Node16",
+		"outDir": "dist",
+		"target": "ES2017",
+		"removeComments": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"moduleResolution": "Node16",
+		"types": ["vitest/globals"]
+	},
+	"include": ["index.ts"]
 }

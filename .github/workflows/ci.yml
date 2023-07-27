@@ -13,7 +13,7 @@ jobs:
       - name: Set up nodejs v18
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install dependencies
         run: npm install
@@ -23,3 +23,6 @@ jobs:
 
       - name: Execute tests
         run: npm run test-ci
+
+      - name: Check formatting
+        run: npx prettier . --check
