@@ -86,7 +86,7 @@ export default defineConfig({
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/i18next/i18next-vue' }
+      { icon: 'github' as const, link: 'https://github.com/i18next/i18next-vue' }
     ],
     lastUpdated: {
       text: 'Last Updated',
