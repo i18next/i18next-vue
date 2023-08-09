@@ -24,6 +24,12 @@ pnpm add i18next-vue
 
 See the [i18next documentation](https://www.i18next.com/overview/api#init) for setting it up. `i18next-vue` does not need a lot of setup on top of that.
 
+::: tip Recommended `i18next` options
+We do recommend to set the `interpolation: {escapeValue: false}` option ([i18next docs](https://www.i18next.com/translation-function/interpolation#all-interpolation-options)), because - except in `v-html` - Vue will already properly escape values intended as plain text.
+
+Also, `fallbackLng: false` is a good idea, if you don't explicitly use that.
+:::
+
 If you have no i18next setup yet, you can also check out [this tutorial blogpost](https://dev.to/adrai/how-to-properly-internationalize-a-vue-application-using-i18next-1doj) for setting up both i18next and i18next-vue.
 
 ```javascript
@@ -33,6 +39,10 @@ import I18NextVue from 'i18next-vue';
 
 i18next.init({
   lng: 'de',
+  interpolation: {
+    escapeValue: false
+  },
+  fallbackLng: false,
   resources: {
     ...
   }
