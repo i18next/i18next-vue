@@ -1,5 +1,7 @@
-# Migration from `i18next-vue` v2.x
-Version 3 has some breaking changes coming from v2.x
+# Migration to `i18next-vue` v3.x
+If you used version 1.x/v2.x before, there are some breaking changes in version 3.
+
+If you upgrade from version 1.x, [setup of plugins](/guide/started)  has changed in Vue 3. Apart from the Vue 3 migration itself, the changes in `i18next-vue` should be the same as coming from 2.x.
 
 ## Breaking changes
 - requires `i18next` >=23
@@ -7,12 +9,12 @@ Version 3 has some breaking changes coming from v2.x
 - the 3.x package is ESM-only
     - Relevant only for [CommonJS users](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c), i. e. when using `require()` imports
 - deprecated support for [`i18nOptions`](/guide/i18n-options) (Options API) <Badge type="warning" text="for removal in 4.0" />
-    - You can use `useTranslation()` with its [new parameters for most of these use-cases](/guide/composition-api#customize-t).
+    - You can use `useTranslation()` with its [new parameters](/guide/composition-api#customize-t) for most of these use-cases instead.
     - Legacy support for `i18nOptions` needs to be enabled explicitly via the [`legacyI18nOptionsSupport: true` plugin option](/guide/started.html#plugin-options)
     - This allows component-by-component migration to `useTranslation()` using the 3.x version. Support for `i18nOptions` will be removed in 4.0.
 - removed support for `<i18n>` blocks in SFCs and `messages` in `i18nOptions` 
     - i.e. no more  per-component translations
-    - There is no replacement for this, as this seems to be a rarely used feature.
+    - There is no replacement for this, as this seems to be a rarely used feature. If you do use this a lot, please open a feature request.
 
 ## New/changed functionality
 - new `useTranslation()` parameters to [specify a fixed language, namespace(s) and a keyprefix](/guide/composition-api#customize-t) (all optional)
