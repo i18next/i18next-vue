@@ -9,13 +9,13 @@ This way you can move blocks of markup around freely in the translations.
 ```javascript
 const locales = {
   en: {
-    tos: "Term of Service",
     term: "I accept {termsOfUseLink}. {strongPromise}.",
+    tos: "Term of Service",
     promise: "I promise"
   },
   de: {
-    tos: "Nutzungsbedingungen",
     term: "{strongPromise}! Ich stimme den {termsOfUseLink} zu.",
+    tos: "Nutzungsbedingungen",
     promise: "Ich versprech's"
   },
 };
