@@ -1,7 +1,7 @@
 # Migration to `i18next-vue` v3.x
 If you used version 1.x/v2.x before, there are some breaking changes in version 3.
 
-If you upgrade from version 1.x, [setup of plugins](/guide/started)  has changed in Vue 3. Apart from the Vue 3 migration itself, the changes in `i18next-vue` should be the same as coming from 2.x.
+If you upgrade from version 1.x, [setup of plugins](/guide/started) has changed in Vue 3. Apart from the Vue 3 migration itself, the changes in `i18next-vue` should be the same as coming from 2.x.
 
 ## Breaking changes
 - requires `i18next` >=23
@@ -13,7 +13,7 @@ If you upgrade from version 1.x, [setup of plugins](/guide/started)  has changed
     - Legacy support for `i18nOptions` needs to be enabled explicitly via the [`legacyI18nOptionsSupport: true` plugin option](/guide/started.html#plugin-options)
     - This allows component-by-component migration to `useTranslation()` using the 3.x version. Support for `i18nOptions` will be removed in 4.0.
 - removed support for `<i18n>` blocks in SFCs and `messages` in `i18nOptions` 
-    - i.e. no more  per-component translations
+    - i.e. no more per-component translations
     - There is no replacement for this, as this seems to be a rarely used feature. If you do use this a lot, please open a feature request.
 
 ## New/changed functionality
@@ -22,4 +22,4 @@ If you upgrade from version 1.x, [setup of plugins](/guide/started)  has changed
     - v2 returned the untranslated translation key, which is usually uglier
 - support for [TypeScript auto-completion of translation keys](https://www.i18next.com/overview/typescript)
     - via `i18next`'s support for this
-    - Your milage may vary (dev performance, ...). If it works for you, it can be quite useful.
+    - Your mileage may vary (dev performance, ...). If it works for you, it can be quite useful.
