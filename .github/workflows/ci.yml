@@ -10,7 +10,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Set up nodejs v16
+      - name: Set up nodejs v18
         uses: actions/setup-node@v3
         with:
           node-version: '18'
