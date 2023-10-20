@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "gh-pages": "^5.0.0",
-    "vitepress": "^1.0.0-rc.4"
+    "vitepress": "^1.0.0-rc.22"
   },
   "type": "module",
   "files": []
