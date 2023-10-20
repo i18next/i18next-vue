@@ -18,6 +18,7 @@
     "vue",
     "typescript"
   ],
+  "// NOTE: you might need": "export NODE_OPTIONS=--openssl-legacy-provider",
   "scripts": {
     "dev": "vuepress dev docs --temp docs/.temp",
     "build": "vuepress build docs --temp docs/.temp",
