@@ -2,20 +2,20 @@
 
 Instead of interpolating values with <code v-pre>{{ someValue }}</code> in the translations you can also interpolate markup (including Vue components) by using the `<i18next>` component and [named slots](https://v2.vuejs.org/v2/guide/components-slots.html#Named-Slots). These can be refrenced as `{ someSlot }` in the translations (mind the single curly braces).
 
-This way you can move blocks of markup around freely in the tranlations.
+This way you can move blocks of markup around freely in the translations.
 
 ## Simple example
 
 ```javascript
 const locales = {
   en: {
-    tos: "Term of Service",
     term: "I accept {termsOfUseLink}. {strongPromise}.",
+    tos: "Term of Service",
     promise: "I promise"
   },
   de: {
-    tos: "Nutzungsbedingungen",
     term: "{strongPromise}! Ich stimme den {termsOfUseLink} zu.",
+    tos: "Nutzungsbedingungen",
     promise: "Ich versprech's"
   },
 };
