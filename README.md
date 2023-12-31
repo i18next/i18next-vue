@@ -178,4 +178,4 @@ app.use(I18NextVue, {
 
 ### Requirements
 
-- node.js >= v18
+- Node.js >= v20
