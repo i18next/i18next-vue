@@ -1,22 +1,7 @@
-import {
-	ref,
-	getCurrentInstance,
-	App,
-	defineComponent,
-	VNode,
-	ComponentPublicInstance,
-	nextTick,
-} from "vue";
+import { ref, getCurrentInstance, App, defineComponent, VNode, nextTick } from "vue";
 import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
 declare module "@vue/runtime-core" {
-	interface ComponentCustomOptions {
-		i18nOptions?: {
-			lng?: string;
-			keyPrefix?: string;
-			namespaces?: string | string[];
-		};
-	}
 	interface ComponentCustomProperties {
 		$t: TFunction;
 		$i18next: i18n;
@@ -30,8 +15,6 @@ interface VueI18NextOptions {
 	slotStart?: string;
 	// Optional custom pattern for matching slot end of the `TranslationComponent`.
 	slotEnd?: string;
-	// enable support for the `i18nOptions` option. Will be removed in v4.
-	legacyI18nOptionsSupport?: boolean;
 }
 
 export default function install(
@@ -41,7 +24,6 @@ export default function install(
 		rerenderOn = ["languageChanged", "loaded", "added", "removed"],
 		slotStart = "{",
 		slotEnd = "}",
-		legacyI18nOptionsSupport = false,
 	}: VueI18NextOptions,
 ): void {
 	// the ref (internally) tracks which Vue instances use translations
@@ -68,19 +50,11 @@ export default function install(
 	app.component("i18next", TranslationComponent);
 
 	const i18nextReady = () => i18next.isInitialized;
-	if (!legacyI18nOptionsSupport) {
-		app.config.globalProperties.$t = withAccessRecording(
-			i18next.t.bind(i18next),
-			usingI18n,
-			i18nextReady,
-		);
-	} else {
-		app.config.globalProperties.$t = withAccessRecording(
-			legacyT,
-			usingI18n,
-			i18nextReady,
-		) as TFunction;
-	}
+	app.config.globalProperties.$t = withAccessRecording(
+		i18next.t.bind(i18next),
+		usingI18n,
+		i18nextReady,
+	);
 
 	// this proxy makes things like $i18next.language (basically) reactive
 	// we also use it to share some internal state with otherwise unrelated code, like the TranslationComponent
@@ -101,36 +75,6 @@ export default function install(
 			}
 		},
 	});
-
-	function legacyT(
-		this: ComponentPublicInstance,
-		keys: string | string[],
-		options?: Record<string, any>,
-	) {
-		const i18nOptions = this.$options.i18nOptions;
-		if (!i18nOptions) {
-			return i18next.t(keys, options);
-		}
-		if (i18nOptions.namespaces && !ensureTranslationsLoaded(i18next, i18nOptions.namespaces)()) {
-			return ""; // will re-render once translations are available
-		}
-
-		let keyPrefix = i18nOptions.keyPrefix;
-		if (typeof keys === "string" && includesNs(keys, i18next)) {
-			keyPrefix = undefined;
-		}
-		let t: TFunction;
-		if (i18nOptions.lng) {
-			t = i18next.getFixedT(i18nOptions.lng, i18nOptions.namespaces, keyPrefix);
-		} else {
-			t = i18next.getFixedT(null, i18nOptions.namespaces ?? null, keyPrefix);
-		}
-		return t(keys, options);
-	}
-	function includesNs(key: string, i18next: i18n): boolean {
-		const nsSeparator = i18next.options.nsSeparator;
-		return typeof nsSeparator === "string" && key.includes(nsSeparator);
-	}
 }
 
 interface Extendedi18n extends i18n {
