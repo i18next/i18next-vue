@@ -77,7 +77,7 @@ export default function install(
 	});
 }
 
-interface Extendedi18n extends i18n {
+interface ExtendedI18n extends i18n {
 	__withAccessRecording: <T extends Function>(t: T, translationsReady: () => boolean) => T;
 	__slotPattern: RegExp;
 }
@@ -158,7 +158,7 @@ function getGlobalI18Next() {
 			"i18next-vue: Make sure to register the i18next-vue plugin using app.use(...).",
 		);
 	}
-	return globalProps.$i18next as Extendedi18n;
+	return globalProps.$i18next as ExtendedI18n;
 }
 
 // pattern matches '{ someSlot }'
