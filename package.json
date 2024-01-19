@@ -1,7 +1,7 @@
 {
   "name": "i18next-vue",
   "description": "i18next-vue docs",
-  "version": "3.0.0-continuous",
+  "version": "4.0.0-continuous",
   "author": "Konrad Kügler <swamblumat-git@yahoo.de>",
   "license": "MIT",
   "repository": {
@@ -26,8 +26,8 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0",
-    "vitepress": "^1.0.0-rc.22"
+    "gh-pages": "^6.1.1",
+    "vitepress": "^1.0.0-rc.39"
   },
   "type": "module",
   "files": []
