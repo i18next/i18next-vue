@@ -11,7 +11,7 @@ const locales = {
   en: {
     hello: 'Hello!',
     loadbundle: 'Load bundle language: {{lang}}',
-  }
+  },
 };
 
 i18next.init({
@@ -33,15 +33,14 @@ const Component1 = {
     return {
       lang: 'DE',
     };
-  }
+  },
 };
 app.component('component1', Component1);
-app.mount('#app')
+app.mount('#app');
 ```
 
 Template:
 
-    
 ```html
 <div id="app">
   <p>{{ $t("message.hello") }}</p>
@@ -60,4 +59,4 @@ Outputs the following:
 </div>
 ```
 
-The `$t` function ususlly uses the language set in i18next.
+The `$t` function usually uses the language set in i18next.

@@ -4,15 +4,14 @@
 
 i18next-vue brings Vue support for i18next and provides:
 
-* Component based localization
-* Lazy loading namespaces
-* Namespaced translation for components
-
+- Component based localization
+- Lazy loading namespaces
+- Namespaced translation for components
 
 Let's [Get Started](./guide/started.md)!
 
 ::: tip Note
-This documentation is for `i18next-vue` v2.x and v3.x, the Vue 3 versions.
+This documentation is for `i18next-vue` v2.x and up, the Vue 3 versions.
 
 There is separate [documentation for the Vue 2 version](https://i18next.github.io/i18next-vue/vue-2/introduction).
 :::

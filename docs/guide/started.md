@@ -3,21 +3,25 @@
 Install the package via
 
 ::: code-group
+
 ```bash[npm]
 npm install i18next-vue
-``` 
+```
+
 ```bash[yarn]
 yarn add i18next-vue
 ```
+
 ```bash[pnpm]
 pnpm add i18next-vue
 ```
+
 :::
 
 ## Requirements
 
 - Vue.js `3.x`
-    - there is a separate [Vue 2 version](https://github.com/i18next/i18next-vue/tree/vue-2) of this library
+  - there is a separate [Vue 2 version](https://github.com/i18next/i18next-vue/tree/vue-2) of this library
 - i18next: `23.x` or newer (`19.x` or newer for version 2)
 
 ## Setup
@@ -54,31 +58,32 @@ app.mount('#app')
 ```
 
 ## Simple usage
+
 Use the instance function `$t` in your Vue components to translate. See [Component-based localization](component.md) for more details.
 The [i18next documentation](https://www.i18next.com/) details all the translation options available through `$t()` (also known as [`t()` in the i18next docs](https://www.i18next.com/overview/api#t)).
 
 ```vue
 <template>
-    <div class="container">
-     {{ $t("greeter.hello-world") }}
-    </div>
+  <div class="container">
+    {{ $t('greeter.hello-world') }}
+  </div>
 </template>
 
 <script>
-export default({
+export default {
   // ...
   methods: {
     logSomething() {
-      console.log(this.$t("common.hello"))
-    }
-  }
-});
+      console.log(this.$t('common.hello'));
+    },
+  },
+};
 </script>
 ```
 
 ## Plugin options
 
-You can use these options during plugin registration: 
+You can use these options during plugin registration:
 
 ```js
 app.use(I18NextVue, {
@@ -87,10 +92,10 @@ app.use(I18NextVue, {
 });
 ```
 
-| Option | | Description |
-| --- | --- | --- |
-| **`18next`** | Required | The 'i18next' instance to use. |
-| **`rerenderOn`** | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values include: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
-| **`slotStart`**<Badge type="info" text="Since 2.2.0" /> | Optional<hr>Default: `{` | Beginning of a slot in the translation component. |
-| **`slotEnd`**<Badge type="info" text="Since 2.2.0" /> | Optional<hr>Default: `}` | End of a slot in the translation component. |
-| **`legacyI18nOptionsSupport`**<Badge type="info" text="Since 3.0" /> | Optional<hr>Default: `false` | Enables [`i18nOptions`](/guide/i18n-options) support in v3.<br>This support **will be removed in v4**.<br>v2 supports `i18nOptions` by default. |
+| Option                                                               |                                                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`18next`**                                                         | Required                                             | The 'i18next' instance to use.                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **`rerenderOn`**                                                     | Optional<hr>Default: Refresh on all relevant events. | Listen for 'i18next' events and refreshes components that use translations.<br>This is a string array. Supported values include: `'initialized'`, `'languageChanged'`, `'loaded'`, `'added'` and `'removed'`.<br>Check the [i18next events documentation](https://www.i18next.com/overview/api#events) for more information. For `'added'` and `'removed'` see the [i18next store documentation](https://www.i18next.com/overview/api#store-events) |
+| **`slotStart`**<Badge type="info" text="Since 2.2.0" />              | Optional<hr>Default: `{`                             | Beginning of a slot in the translation component.                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **`slotEnd`**<Badge type="info" text="Since 2.2.0" />                | Optional<hr>Default: `}`                             | End of a slot in the translation component.                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **`legacyI18nOptionsSupport`**<Badge type="info" text="Since 3.0" /> | Optional<hr>Default: `false`                         | Enables [`i18nOptions`](/guide/i18n-options) support in v3.<br>This support **is removed in v4**.<br>v2 supports `i18nOptions` by default.                                                                                                                                                                                                                                                                                                          |

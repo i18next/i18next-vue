@@ -14,7 +14,7 @@ export default defineConfig({
         link: '/guide/started',
       },
       {
-        text: 'v2.x/3.x (Vue 3)',
+        text: 'v2.x - 4.x (Vue 3)',
         items: [
           { text: 'v1.x (Vue 2)', link: 'https://i18next.github.io/i18next-vue/vue-2/introduction' }
         ]
@@ -81,6 +81,10 @@ export default defineConfig({
           {
             text: 'Migration from <br>i18next-vue v2.x',
             link: '/migration-v3.md',
+          },
+          {
+            text: 'Migration from <br>i18next-vue v3.x',
+            link: '/migration-v4.md',
           },
         ]
       },
