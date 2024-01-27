@@ -8,7 +8,7 @@ There is also a [Vue 2 version of this package](https://github.com/i18next/i18ne
 
 ## Upgrade
 
-In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html) or [from `i18next-vue` 2.x or 1.x](https://i18next.github.io/i18next-vue/migration-v3.html).
+In the [documentation](https://i18next.github.io/i18next-vue/), you can find information on how to [upgrade from `@panter/vue-i18next`](https://i18next.github.io/i18next-vue/migration.html), [from `i18next-vue` 3.x](https://i18next.github.io/i18next-vue/migration-v4.html) or [earlier versions](https://i18next.github.io/i18next-vue/migration-v3.html).
 
 ## Installation
 
