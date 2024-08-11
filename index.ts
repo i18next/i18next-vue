@@ -1,7 +1,7 @@
 import { ref, getCurrentInstance, App, defineComponent, VNode, nextTick } from "vue";
 import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
 
-declare module "@vue/runtime-core" {
+declare module "vue" {
 	interface ComponentCustomProperties {
 		$t: TFunction;
 		$i18next: i18n;
