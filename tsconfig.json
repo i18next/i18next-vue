@@ -9,7 +9,7 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"moduleResolution": "Node16",
-		"types": ["vitest/globals"],
+		"types": ["vitest/globals"]
 	},
-	"include": ["index.ts"],
+	"include": ["index.ts"]
 }
