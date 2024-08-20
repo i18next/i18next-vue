@@ -21,6 +21,7 @@
 	"scripts": {
 		"dev": "npm run build -- --watch index.ts",
 		"build": "tsup index.ts --format esm --dts",
+                "prepare": "npm run build",
 		"test": "vitest",
 		"test-ci": "vitest run",
 		"coverage": "vitest run --coverage && rm -rf ./coverage",
