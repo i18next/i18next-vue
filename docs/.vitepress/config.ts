@@ -14,7 +14,7 @@ export default defineConfig({
         link: '/guide/started',
       },
       {
-        text: 'v2.x - 4.x (Vue 3)',
+        text: 'v2.x - 5.x (Vue 3)',
         items: [
           { text: 'v1.x (Vue 2)', link: 'https://i18next.github.io/i18next-vue/vue-2/introduction' }
         ]

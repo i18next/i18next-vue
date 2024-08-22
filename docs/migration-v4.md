@@ -16,3 +16,13 @@ Then iteratively migrate all its uses to `useTranslation()` with its [new parame
 ## New/changed functionality
 
 No new functionality. This is a cleanup-only release.
+
+# Migration to `i18next-vue` v5.x
+
+(Re-phrasing the [Vue Router changelog](https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#441-2024-07-31) for an analogous change):
+
+> This release replaces `declare module '@vue/runtime-core'` with `declare module 'vue'` [like it's supposed to be](https://vuejs.org/guide/typescript/options-api.html#augmenting-global-properties). If you (or packages you use) are also augmenting `@vue/runtime-core`, you will likely have to change it to `vue`. It is also recommended to use an up-to-date TypeScript version (>=5.4) and `"moduleResolution": "Bundler"` in your `tsconfig.json`.
+
+## New/changed functionality
+
+No other changes/migration necessary.
