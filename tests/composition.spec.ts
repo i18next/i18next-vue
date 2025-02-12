@@ -61,6 +61,34 @@ test("Language change", async () => {
 	await expectText(wrapper, "Hello world");
 });
 
+test("$i18next reactivity", async () => {
+	const LangComponent = {
+		template: "<p>{{ i18next.language }}</p>",
+		setup() {
+			return useTranslation();
+		},
+	};
+	const i18next = globalI18next.createInstance();
+	await i18next.init({
+		lng: "en",
+		resources: {},
+	});
+
+	const wrapper = mount(LangComponent, {
+		global: {
+			plugins: [[i18nextvue, { i18next }]],
+		},
+	});
+
+	expect(wrapper.text()).toBe("en");
+
+	await i18next.changeLanguage("de");
+	await expectText(wrapper, "de");
+
+	await i18next.changeLanguage("en");
+	await expectText(wrapper, "en");
+});
+
 test("Composition-t with set namespace", async () => {
 	const CompositionWithNsp = {
 		template: "<p>local: {{ t(k) }}  - global: {{ $t(k) }} </p>",
