@@ -1,5 +1,5 @@
-import { ref, getCurrentInstance, App, defineComponent, VNode, nextTick } from "vue";
-import { i18n, TFunction, Namespace, KeyPrefix } from "i18next";
+import { ref, defineComponent, nextTick, inject, type App, type VNode } from "vue";
+import { i18n, type TFunction, type Namespace, type KeyPrefix } from "i18next";
 
 declare module "vue" {
 	interface ComponentCustomProperties {
@@ -17,6 +17,7 @@ interface VueI18NextOptions {
 	slotEnd?: string;
 }
 
+const INJECTION_KEY = Symbol();
 export default function install(
 	app: App,
 	{
@@ -57,29 +58,27 @@ export default function install(
 	);
 
 	// this proxy makes things like $i18next.language (basically) reactive
-	// we also use it to share some internal state with otherwise unrelated code, like the TranslationComponent
-	app.config.globalProperties.$i18next = new Proxy(i18next, {
+	const proxiedI18next = new Proxy(i18next, {
 		get(target, prop) {
-			switch (prop) {
-				case "__withAccessRecording": {
-					return (f: Function, translationsReady: () => boolean) =>
-						withAccessRecording(f, usingI18n, translationsReady);
-				}
-				case "__slotPattern": {
-					return slotNamePattern(slotStart, slotEnd);
-				}
-				default: {
-					usingI18n();
-					return Reflect.get(target, prop);
-				}
-			}
+			usingI18n();
+			return Reflect.get(target, prop);
+		},
+	});
+	app.config.globalProperties.$i18next = proxiedI18next;
+
+	app.provide<I18nPluginContext>(INJECTION_KEY, {
+		i18next: proxiedI18next,
+		slotPattern: slotNamePattern(slotStart, slotEnd),
+		withAccessRecording(t, translationsReady) {
+			return withAccessRecording(t, usingI18n, translationsReady);
 		},
 	});
 }
 
-interface ExtendedI18n extends i18n {
-	__withAccessRecording: <T extends Function>(t: T, translationsReady: () => boolean) => T;
-	__slotPattern: RegExp;
+interface I18nPluginContext {
+	withAccessRecording: <T extends Function>(t: T, translationsReady: () => boolean) => T;
+	slotPattern: RegExp;
+	i18next: i18n;
 }
 interface UseTranslationOptions<TKPrefix = undefined> {
 	keyPrefix?: TKPrefix;
@@ -90,7 +89,7 @@ export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N
 	ns?: N,
 	options?: UseTranslationOptions<TKPrefix>,
 ) {
-	const i18next = getGlobalI18Next();
+	const { i18next, withAccessRecording } = getContext();
 	let t: TFunction<N, TKPrefix>;
 
 	if (options?.lng) {
@@ -99,8 +98,8 @@ export function useTranslation<N extends Namespace, TKPrefix extends KeyPrefix<N
 		t = i18next.getFixedT(null, ns ?? null, options?.keyPrefix);
 	}
 	return {
-		i18next: i18next as i18n,
-		t: i18next.__withAccessRecording(t, ensureTranslationsLoaded(i18next, ns)),
+		i18next,
+		t: withAccessRecording(t, ensureTranslationsLoaded(i18next, ns)),
 	};
 }
 
@@ -145,20 +144,14 @@ function withAccessRecording<T extends Function>(
 	}) as T;
 }
 
-function getGlobalI18Next() {
-	const instance = getCurrentInstance();
-	if (!instance) {
-		throw new Error(
-			"i18next-vue: No Vue instance in context. This needs to be called inside setup().",
-		);
-	}
-	const globalProps = instance.appContext.config.globalProperties;
-	if (!globalProps.$i18next) {
+function getContext() {
+	const i18nextContext = inject<I18nPluginContext>(INJECTION_KEY);
+	if (!i18nextContext) {
 		throw new Error(
 			"i18next-vue: Make sure to register the i18next-vue plugin using app.use(...).",
 		);
 	}
-	return globalProps.$i18next as ExtendedI18n;
+	return i18nextContext;
 }
 
 // pattern matches '{ someSlot }'
@@ -175,7 +168,7 @@ export const TranslationComponent = defineComponent({
 		},
 	},
 	setup(props, { slots }) {
-		const slotPattern = getGlobalI18Next().__slotPattern;
+		const { slotPattern } = getContext();
 		return () => {
 			const translation = props.translation;
 			const result: (string | VNode)[] = [];

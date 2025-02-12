@@ -3,6 +3,7 @@ import { expect, test } from "vitest";
 import globalI18next from "i18next";
 import i18nextvue, { useTranslation } from "../index";
 import { expectText } from "./helpers";
+import { ref } from "vue";
 
 const CompositionWithKey = {
 	template: "<p>{{ t(k) }}</p>",
@@ -145,4 +146,37 @@ test("Composition-t with set language", async () => {
 	});
 
 	expect(wrapper.text()).toBe("local: Hallo Welt - global: Hello world");
+});
+
+test("Translation with only a provide context and no component", async () => {
+	const i18next = globalI18next.createInstance();
+	await i18next.init({
+		lng: "en",
+		resources: {
+			en: { translation: { hello: "Hello world" } },
+		},
+	});
+
+	const result = ref("");
+	mount(CompositionWithKey, {
+		props: {
+			k: "hello",
+		},
+		global: {
+			plugins: [
+				[i18nextvue, { i18next }],
+				// fake plugin that uses the translation outside of a component/setup context
+				{
+					install(app) {
+						app.runWithContext(() => {
+							const { t } = useTranslation();
+							result.value = t("hello");
+						});
+					},
+				},
+			],
+		},
+	});
+
+	expect(result.value).toBe("Hello world");
 });
