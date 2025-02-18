@@ -3,7 +3,7 @@ import { i18n, type TFunction, type Namespace, type KeyPrefix } from "i18next";
 
 declare module "vue" {
 	interface ComponentCustomProperties {
-		$t: TFunction;
+		$t: TFunction<Namespace>;
 		$i18next: i18n;
 	}
 }
