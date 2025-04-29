@@ -1,4 +1,4 @@
-import { ref, defineComponent, nextTick, inject, type App, type VNode } from "vue";
+import { shallowRef, defineComponent, nextTick, inject, type App, type VNode } from "vue";
 import { i18n, type TFunction, type Namespace, type KeyPrefix } from "i18next";
 
 declare module "vue" {
@@ -29,7 +29,7 @@ export default function install(
 ): void {
 	// the ref (internally) tracks which Vue instances use translations
 	// Vue will automatically trigger re-renders when the value of 'lastI18nChange' changes
-	const lastI18nChange = ref(new Date());
+	const lastI18nChange = shallowRef(new Date());
 	const invalidate = () =>
 		nextTick(() => {
 			// defer, so namespace loading is actually complete before re-rendering
