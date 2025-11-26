@@ -1,7 +1,7 @@
 {
 	"name": "i18next-vue",
 	"description": "i18next integration for Vue",
-	"version": "5.3.0",
+	"version": "5.3.1",
 	"author": "Konrad Kügler <swamblumat-git@yahoo.de>",
 	"license": "MIT",
 	"repository": {

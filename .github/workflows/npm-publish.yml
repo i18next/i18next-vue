@@ -1,27 +1,29 @@
-name: Publish to npm
+name: Publish Package
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   publish:
-    name: Build and publish package
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          registry-url: "https://registry.npmjs.org/"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Update npm
+        run: npm install -g npm@latest
 
-      - name: Publish package to npm
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+      - run: npm ci
+      - run: npm run build
+      - run: npm publish
