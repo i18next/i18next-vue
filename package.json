@@ -1,7 +1,7 @@
 {
 	"name": "i18next-vue",
 	"description": "i18next integration for Vue",
-	"version": "5.3.1",
+	"version": "5.4.0",
 	"author": "Konrad Kügler <swamblumat-git@yahoo.de>",
 	"license": "MIT",
 	"repository": {
@@ -24,7 +24,7 @@
 		"prepare": "npm run build",
 		"test": "vitest",
 		"test-ci": "vitest run",
-		"coverage": "vitest run --coverage && rm -rf ./coverage",
+		"coverage": "vitest run --coverage",
 		"format": "prettier . --write"
 	},
 	"type": "module",
@@ -36,13 +36,13 @@
 		"vue": "^3.4.38"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "^2.0.5",
+		"@vitest/coverage-v8": "^4.0.16",
 		"@vue/test-utils": "^2.4.6",
-		"jsdom": "^24.1.1",
-		"prettier": "3.3.3",
+		"jsdom": "^27.3.0",
+		"prettier": "3.7.4",
 		"tsdown": "^0.18.1",
-		"typescript": "^5.5.4",
-		"vitest": "^2.0.5"
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.16"
 	},
 	"files": [
 		"dist/**/*"
