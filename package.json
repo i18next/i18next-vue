@@ -20,7 +20,7 @@
 	],
 	"scripts": {
 		"dev": "npm run build -- --watch index.ts",
-		"build": "tsup index.ts --format esm --dts",
+		"build": "tsdown index.ts",
 		"prepare": "npm run build",
 		"test": "vitest",
 		"test-ci": "vitest run",
@@ -28,9 +28,9 @@
 		"format": "prettier . --write"
 	},
 	"type": "module",
-	"module": "./dist/index.js",
-	"exports": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"module": "./dist/index.mjs",
+	"exports": "./dist/index.mjs",
+	"types": "./dist/index.d.mts",
 	"peerDependencies": {
 		"i18next": ">=23",
 		"vue": "^3.4.38"
@@ -40,12 +40,11 @@
 		"@vue/test-utils": "^2.4.6",
 		"jsdom": "^24.1.1",
 		"prettier": "3.3.3",
-		"tsup": "^8.2.4",
+		"tsdown": "^0.18.1",
 		"typescript": "^5.5.4",
 		"vitest": "^2.0.5"
 	},
 	"files": [
-		"dist/**/*",
-		"types/**/*"
+		"dist/**/*"
 	]
 }
