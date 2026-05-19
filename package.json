@@ -26,10 +26,10 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "gh-pages": "^6.2.0",
-    "vitepress": "^1.4.1"
+    "gh-pages": "^6.3.0",
+    "vitepress": "^1.6.4"
   },
   "type": "module",
   "files": [],
-  "packageManager": "pnpm@9.12.2+sha256.2ef6e547b0b07d841d605240dce4d635677831148cd30f6d564b8f4f928f73d2"
+  "packageManager": "pnpm@11.1.3"
 }
