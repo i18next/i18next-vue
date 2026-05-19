@@ -69,6 +69,10 @@ export default defineConfig({
             text: '&lt;i18n&gt; blocks',
             link: '/guide/single-file-component.md',
           },
+          {
+            text: 'Use with Locize',
+            link: '/guide/use-with-locize.md',
+          },
         ]
       },
       {
