@@ -2,13 +2,11 @@
 	"compilerOptions": {
 		"declaration": true,
 		"declarationDir": "types",
-		"module": "Node16",
+		"module": "es2022",
 		"outDir": "dist",
-		"target": "ES2017",
+		"target": "es2022",
 		"removeComments": true,
-		"strict": true,
-		"esModuleInterop": true,
-		"moduleResolution": "Node16",
+		"moduleResolution": "bundler",
 		"types": ["vitest/globals"]
 	},
 	"include": ["index.ts"]

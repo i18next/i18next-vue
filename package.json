@@ -36,13 +36,14 @@
 		"vue": "^3.4.38"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "^4.0.16",
-		"@vue/test-utils": "^2.4.6",
-		"jsdom": "^27.3.0",
-		"prettier": "3.7.4",
-		"tsdown": "^0.18.1",
-		"typescript": "^5.9.3",
-		"vitest": "^4.0.16"
+		"@vitest/coverage-v8": "^4.1.6",
+		"@vue/test-utils": "^2.4.10",
+		"jsdom": "^29.1.1",
+		"prettier": "3.8.3",
+		"tsdown": "^0.22.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.13",
+		"vitest": "^4.1.6"
 	},
 	"files": [
 		"dist/**/*"
